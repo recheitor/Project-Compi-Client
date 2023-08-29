@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Form, Button } from "react-bootstrap"
 import amenityServices from '../../services/amenity.services'
 import { useNavigate } from 'react-router-dom'
-
+import uploadServices from '../../services/upload.services'
 
 const AddAmenityForm = () => {
 
@@ -10,6 +10,8 @@ const AddAmenityForm = () => {
         name: '',
         icon: ''
     })
+
+    const [loadingIcon, setLoadingIcon] = useState(false)
 
     const navigate = useNavigate()
 
@@ -28,6 +30,26 @@ const AddAmenityForm = () => {
             .catch(err => console.log(err))
     }
 
+    const handleFileUpload = e => {
+
+        setLoadingIcon(true)
+
+        const formData = new FormData()
+
+        formData.append('imageData', e.target.files[0])
+
+        uploadServices
+            .uploadimage(formData)
+            .then(({ data }) => {
+                setAmenityData({ ...amenityData, icon: data.cloudinary_url })
+                setLoadingIcon(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setLoadingIcon(true)
+            })
+    }
+
     return (
         <div className="AddAmenityForm">
             <Form onSubmit={handleFormSubmit}>
@@ -37,12 +59,14 @@ const AddAmenityForm = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="icon">
-                    <Form.Label>Icon</Form.Label>
-                    <Form.Control type="text" value={amenityData.icon} name="icon" onChange={handleInputChange} />
+                    <Form.Label>Icon (URL)</Form.Label>
+                    <Form.Control type="file" onChange={handleFileUpload} />
                 </Form.Group>
 
+
                 <div className="d-grid">
-                    <Button variant="dark" type="submit">Add Amenity</Button>
+                    <Button variant="dark" type="submit" disabled={loadingIcon}>
+                        {loadingIcon ? 'Uploading icon...' : 'Add Amenity'}</Button>
                 </div>
             </Form>
         </div>

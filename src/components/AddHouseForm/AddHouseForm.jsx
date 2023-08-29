@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Form, Button } from "react-bootstrap"
 import houseServices from '../../services/house.services'
 import { useNavigate } from 'react-router-dom'
-
+import uploadServices from '../../services/upload.services'
 
 const AddHouseForm = () => {
 
@@ -26,6 +26,8 @@ const AddHouseForm = () => {
         // owner: ''
     })
 
+    const [loadingGallery, setLoadingGallery] = useState(false)
+
     const navigate = useNavigate()
 
     const handleInputChange = e => {
@@ -43,6 +45,25 @@ const AddHouseForm = () => {
             .catch(err => console.log(err))
     }
 
+    const handleFileUpload = e => {
+
+        setLoadingGallery(true)
+
+        const formData = new FormData()
+        formData.append('imagesData', e.target.files)
+
+        uploadServices
+            .uploadimages(formData)
+            .then(({ data }) => {
+                setHouseData({ ...houseData, gallery: data.cloudinary_url })
+                setLoadingGallery(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setLoadingGallery(true)
+            })
+    }
+
     return (
         <div className="AddHomeForm">
             <Form onSubmit={handleFormSubmit}>
@@ -52,9 +73,14 @@ const AddHouseForm = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="gallery">
+                    <Form.Label>Gallery (URL)</Form.Label>
+                    <Form.Control type="file" multiple onChange={handleFileUpload} />
+                </Form.Group>
+
+                {/* <Form.Group className="mb-3" controlId="gallery">
                     <Form.Label>Gallery</Form.Label>
                     <Form.Control type="text" value={houseData.gallery} name="gallery" onChange={handleInputChange} />
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="description">
                     <Form.Label>Description</Form.Label>
@@ -132,7 +158,8 @@ const AddHouseForm = () => {
                 </Form.Group> */}
 
                 <div className="d-grid">
-                    <Button variant="dark" type="submit">Add house</Button>
+                    <Button variant="dark" type="submit" disabled={loadingGallery}>
+                        {loadingGallery ? 'Uploading gallery...' : 'Add House'}</Button>
                 </div>
             </Form>
         </div>
