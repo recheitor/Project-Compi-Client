@@ -1,8 +1,12 @@
-import { useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { Form, Button } from "react-bootstrap"
 import houseServices from '../../services/house.services'
 import { useNavigate } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
+import AmenitiesAccordion from '../AmenitiesAccordion/AmenitiesAccordion'
+import amenityService from '../../services/amenity.services'
+
+// const houseDataContext = createContext()
 
 const AddHouseForm = () => {
 
@@ -21,18 +25,58 @@ const AddHouseForm = () => {
         zipcode: '',
         city: '',
         country: '',
-        // amenity: '',
+        amenities: [],
+
         // included: '',
         // owner: ''
     })
 
+    // const [amenities, setAmenities] = useState([])
+    useEffect(() => {
+        loadAmenities()
+    }, [])
+
+
+
+    const loadAmenities = () => {
+        amenityService
+            .getAllAmenities()
+            .then(({ data }) => {
+                const amenitiesArray = []
+                data.map(data => {
+                    amenitiesArray.push({ amenity: data._id, name: data.name, icon: data.icon, included: false })
+                })
+                setHouseData({ ...houseData, amenities: amenitiesArray })
+            })
+
+            .catch(err => console.log(err))
+    }
+
     const [loadingGallery, setLoadingGallery] = useState(false)
+    const [isChecked, setChecked] = useState(false)
 
     const navigate = useNavigate()
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
+
         setHouseData({ ...houseData, [name]: value })
+    }
+
+    const handleCheckChange = e => {
+        const { checked, name } = e.currentTarget
+
+        let amenityChanged = houseData.amenities.map(eachAmenity => {
+            if (eachAmenity.name === name) {
+                return { ...eachAmenity, included: checked }
+            } else {
+                return { ...eachAmenity }
+            }
+
+        })
+
+        // houseData.amenities.push({ name, checked })
+        setHouseData({ ...houseData, amenities: amenityChanged })
     }
 
     const handleFormSubmit = e => {
@@ -44,7 +88,6 @@ const AddHouseForm = () => {
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
-
     const handleFileUpload = e => {
 
         setLoadingGallery(true)
@@ -78,11 +121,6 @@ const AddHouseForm = () => {
                     <Form.Label>Gallery (URL)</Form.Label>
                     <Form.Control type="file" multiple onChange={handleFileUpload} />
                 </Form.Group>
-
-                {/* <Form.Group className="mb-3" controlId="gallery">
-                    <Form.Label>Gallery</Form.Label>
-                    <Form.Control type="text" value={houseData.gallery} name="gallery" onChange={handleInputChange} />
-                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="description">
                     <Form.Label>Description</Form.Label>
@@ -144,14 +182,40 @@ const AddHouseForm = () => {
                     <Form.Control type="text" value={houseData.country} name="country" onChange={handleInputChange} />
                 </Form.Group>
 
+                <Form.Group className="mb-3" controlId="amenities">
+                    <Form.Label>Amenities</Form.Label>
+                    {
+                        houseData.amenities.map(elem => {
+
+                            return (
+
+                                <div key={`${elem.amenity}`} className="mb-3">
+                                    <Form.Check
+                                        type="checkbox"
+                                        label={`${elem.name}`}
+                                        checked={elem.included}
+                                        name={`${elem.name}`}
+                                        onChange={handleCheckChange}
+                                    />
+                                </div>
+                            )
+
+                        })
+                    }
+                </Form.Group>
+
+                {/* <houseDataContext.Provider value={{ houseData, setHouseData }}>
+                    <AmenitiesAccordion />
+                </houseDataContext.Provider> */}
+
                 {/* <Form.Group className="mb-3" controlId="amenity">
                     <Form.Label>Amenity</Form.Label>
-                    <Form.Control type="text" value={houseData.amenity} name="amenity" onChange={handleInputChange} />
+                    <Form.Control type="text" value={houseData.amenities.amenity} name="amenity" onChange={handleInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="included">
                     <Form.Label>Included</Form.Label>
-                    <Form.Control type="text" value={houseData.included} name="included" onChange={handleInputChange} />
+                    <Form.Control type="text" value={houseData.amenities.included} name="included" onChange={handleInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="owner">
@@ -164,8 +228,9 @@ const AddHouseForm = () => {
                         {loadingGallery ? 'Uploading gallery...' : 'Add House'}</Button>
                 </div>
             </Form>
-        </div>
+        </div >
     )
 }
 
+// export { AddHouseForm, houseDataContext }
 export default AddHouseForm

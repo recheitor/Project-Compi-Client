@@ -1,0 +1,22 @@
+.custom-checkbox {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  vertical-align: middle;
+}
+
+.checkbox-green {
+  background-color: green;
+  border-color: green;
+}
+
+.checkbox-red {
+  background-color: red;
+  border-color: red;
+}
