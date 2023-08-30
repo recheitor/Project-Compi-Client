@@ -50,12 +50,14 @@ const AddHouseForm = () => {
         setLoadingGallery(true)
 
         const formData = new FormData()
-        formData.append('imagesData', e.target.files)
+        for (let i = 0; i < e.target.files.length; i++) {
+            formData.append('imagesData', e.target.files[i])
+        }
 
         uploadServices
             .uploadimages(formData)
             .then(({ data }) => {
-                setHouseData({ ...houseData, gallery: data.cloudinary_url })
+                setHouseData({ ...houseData, gallery: data.cloudinary_urls })
                 setLoadingGallery(false)
             })
             .catch(err => {
