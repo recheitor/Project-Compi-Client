@@ -32,7 +32,7 @@ class HouseService {
     }
 
     getHousesbyOwnerId(user_id) {
-        return this.api.post(`/get-my-houses/${user_id}`)
+        return this.api.get(`/get-my-houses/${user_id}`)
     }
 
     getOneHouse(house_id) {
