@@ -5,6 +5,7 @@ const TripleCheckbox = () => {
     const [checkboxState, setCheckboxState] = useState(0) // 0: none, 1: green, 2: red
 
     const handleClick = () => {
+
         setCheckboxState((prevState) => (prevState + 1) % 3)
     }
 

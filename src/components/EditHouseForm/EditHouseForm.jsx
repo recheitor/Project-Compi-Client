@@ -1,54 +1,67 @@
-import { useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { Form, Button } from "react-bootstrap"
 import houseServices from '../../services/house.services'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
 import amenityService from '../../services/amenity.services'
+import { AuthContext } from '../../contexts/auth.context'
 
-const AddHouseForm = () => {
+const EditHouseForm = () => {
+
+    const navigate = useNavigate()
+    const { loggedUser } = useContext(AuthContext)
+    const { id } = useParams()
+    const [loadingGallery, setLoadingGallery] = useState(false)
 
     const [houseData, setHouseData] = useState({
         title: '',
-        gallery: '',
+        gallery: [],
         description: '',
-        maxGuests: '',
-        rooms: '',
-        beds: '',
-        bathrooms: '',
-        housePrice: '',
-        cleaningPrice: '',
-        street: '',
-        number: '',
-        zipcode: '',
-        city: '',
-        country: '',
-        amenities: [],
+        info: {
+            maxGuests: 0,
+            rooms: 0,
+            beds: 0,
+            bathrooms: 0,
+        },
+        price: {
+            housePrice: 0,
+            cleaningPrice: 0,
+        },
+        address: {
+            street: '',
+            number: 0,
+            zipcode: 0,
+            city: '',
+            country: '',
+        },
+        amenities: []
     })
 
-    // const [amenities, setAmenities] = useState([])
-    useEffect(() => {
-        loadAmenities()
-    }, [])
+    const getHouseForm = () => {
 
-
-
-    const loadAmenities = () => {
-        amenityService
-            .getAllAmenities()
-            .then(({ data }) => {
+        Promise.all([houseServices.getOneHouse(id), amenityService.getAllAmenities()])
+            .then(result => {
+                const houseDetails = result[0].data
+                const { data } = result[1]
+                const { maxGuests, beds, bathrooms, rooms } = houseDetails.info
+                delete houseDetails.info
+                const { housePrice, cleaningPrice } = houseDetails.price
+                delete houseDetails.price
+                const { street, number, zipcode, city, country } = houseDetails.address
+                delete houseDetails.address
                 const amenitiesArray = []
+
                 data.map(data => {
                     amenitiesArray.push({ amenity: data._id, name: data.name, icon: data.icon, included: false })
                 })
-                setHouseData({ ...houseData, amenities: amenitiesArray })
+                setHouseData({ ...houseData, ...houseDetails, maxGuests, beds, bathrooms, rooms, housePrice, cleaningPrice, street, number, zipcode, city, country, amenities: amenitiesArray })
             })
-
             .catch(err => console.log(err))
     }
 
-    const [loadingGallery, setLoadingGallery] = useState(false)
-
-    const navigate = useNavigate()
+    useEffect(() => {
+        getHouseForm()
+    }, [])
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
@@ -75,10 +88,11 @@ const AddHouseForm = () => {
         e.preventDefault()
 
         houseServices
-            .createHouse(houseData)
+            .editHouse(id, houseData)
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
+
     const handleFileUpload = e => {
 
         setLoadingGallery(true)
@@ -107,6 +121,15 @@ const AddHouseForm = () => {
                     <Form.Label>Title</Form.Label>
                     <Form.Control type="text" value={houseData.title} name="title" onChange={handleInputChange} />
                 </Form.Group>
+
+                <p>Image Gallery</p>
+                {
+                    houseData.gallery.map((eachPhoto, idx) => {
+                        return (
+                            <img key={idx} style={{ height: '100px' }} src={eachPhoto} alt="" />
+                        )
+                    })
+                }
 
                 <Form.Group className="mb-3" controlId="gallery">
                     <Form.Label>Gallery (URL)</Form.Label>
@@ -176,32 +199,34 @@ const AddHouseForm = () => {
                 <Form.Group className="mb-3" controlId="amenities">
                     <Form.Label>Amenities</Form.Label>
                     {
-                        houseData.amenities.map(elem => {
+                        houseData.amenities ?
+                            houseData.amenities.map(elem => {
+                                return (
 
-                            return (
+                                    <div key={`${elem.amenity}`} className="mb-3">
+                                        <Form.Check
+                                            type="checkbox"
+                                            label={`${elem.name}`}
+                                            checked={elem.included}
+                                            name={`${elem.name}`}
+                                            onChange={handleCheckChange}
+                                        />
+                                    </div>
+                                )
 
-                                <div key={`${elem.amenity}`} className="mb-3">
-                                    <Form.Check
-                                        type="checkbox"
-                                        label={`${elem.name}`}
-                                        checked={elem.included}
-                                        name={`${elem.name}`}
-                                        onChange={handleCheckChange}
-                                    />
-                                </div>
-                            )
-
-                        })
+                            })
+                            :
+                            <h2>Loading...</h2>
                     }
                 </Form.Group>
 
                 <div className="d-grid">
                     <Button variant="dark" type="submit" disabled={loadingGallery}>
-                        {loadingGallery ? 'Uploading gallery...' : 'Add House'}</Button>
+                        {loadingGallery ? 'Uploading gallery...' : 'Edit House'}</Button>
                 </div>
             </Form>
         </div >
     )
 }
 
-export default AddHouseForm
+export default EditHouseForm
