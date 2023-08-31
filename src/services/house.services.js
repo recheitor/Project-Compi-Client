@@ -28,7 +28,7 @@ class HouseService {
     }
 
     getHousesbyType(rent_type) {
-        return this.api.post(`/get-houses/${rent_type}`)
+        return this.api.get(`/get-houses/${rent_type}`)
     }
 
     getHousesbyOwnerId(user_id) {
@@ -36,7 +36,11 @@ class HouseService {
     }
 
     getOneHouse(house_id) {
-        return this.api.get(`/${house_id}`)
+        return this.api.get(`/get-house/${house_id}`)
+    }
+
+    getOneHouseRoom(house_id) {
+        return this.api.get(`/get-rooms-house/${house_id}`)
     }
 
     editHouse(house_id, houseData) {

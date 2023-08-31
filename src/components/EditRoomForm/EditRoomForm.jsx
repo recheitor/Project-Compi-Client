@@ -1,28 +1,26 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Form, Button } from "react-bootstrap"
 import roomServices from '../../services/room.services'
-import houseServices from '../../services/house.services'
 
 import { useNavigate, useParams } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
-import { AuthContext } from "../../contexts/auth.context"
 
 
 const EditRoomForm = () => {
-
-
-
-    const { loggedUser } = useContext(AuthContext)
 
     const { id } = useParams()
 
     const getHousesForm = () => {
 
-        Promise.all([houseServices.getHousesbyOwnerId(loggedUser._id), roomServices.getOneRoom(id)])
-            .then(result => {
-                const ownerHouses = result[0].data
-                const roomDetails = result[1].data
-                setRoomData({ ...roomData, house: ownerHouses, ...roomDetails })
+        roomServices
+            .getOneRoom(id)
+            .then(({ data: roomDetails }) => {
+
+                const { maxGuests, beds, bathroom } = roomDetails.info
+                delete roomDetails.info
+                const { roomPrice, cleaningPrice } = roomDetails.price
+                delete roomDetails.price
+                setRoomData({ ...roomData, ...roomDetails, maxGuests, beds, bathroom, roomPrice, cleaningPrice })
             })
             .catch(err => console.log(err))
     }
@@ -32,20 +30,14 @@ const EditRoomForm = () => {
     }, [])
 
     const [roomData, setRoomData] = useState({
-        house: [],
         title: '',
         gallery: [],
         description: '',
-        info: {
-            maxGuests: '',
-            beds: '',
-            bathroom: ''
-        },
-        price: {
-            roomPrice: '',
-            cleaningPrice: '',
-        },
-        house_id: ''
+        maxGuests: '',
+        beds: '',
+        bathroom: '',
+        roomPrice: '',
+        cleaningPrice: '',
     })
 
     const [loadingGallery, setLoadingGallery] = useState(false)
@@ -63,7 +55,7 @@ const EditRoomForm = () => {
         e.preventDefault()
 
         roomServices
-            .createRoom(roomData)
+            .editRoom(roomData._id, roomData)
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
@@ -76,12 +68,11 @@ const EditRoomForm = () => {
         for (let i = 0; i < e.target.files.length; i++) {
             formData.append('imagesData', e.target.files[i])
         }
-        console.log(formData)
+
         uploadServices
             .uploadimages(formData)
             .then(({ data }) => {
-                const newGalleryUrls = [...roomData.gallery, data.cloudinary_urls]
-
+                const newGalleryUrls = [...roomData.gallery, ...data.cloudinary_urls]
                 setRoomData({ ...roomData, gallery: newGalleryUrls })
                 setLoadingGallery(false)
             })
@@ -94,28 +85,14 @@ const EditRoomForm = () => {
     return (
         <div className="EditHomeForm">
             <Form onSubmit={handleFormSubmit}>
-                <Form.Group className="mb-3" controlId="room">
-                    <Form.Select size="sm" value={roomData.house_id} name='house_id' onChange={handleInputChange}>
-                        <option key='Selectt' >Select a house</option>
-                        {
-                            roomData.house.map(eachHouse =>
-                                <option key={eachHouse._id + 'room'} value={eachHouse._id}>
-                                    {eachHouse.title}
-                                </option>)
-                        }
-                    </Form.Select>
-                </Form.Group>
-
                 <p>Image Gallery</p>
                 {
                     roomData.gallery.map(eachPhoto => {
                         return (
-                            <img style={{ height: '100px' }} src={eachPhoto} alt="" />
+                            <img key={eachPhoto} style={{ height: '100px' }} src={eachPhoto} alt="" />
                         )
                     })
                 }
-
-
 
                 <Form.Group className="mb-3" controlId="title">
                     <Form.Label>Title</Form.Label>
@@ -135,27 +112,27 @@ const EditRoomForm = () => {
 
                 <Form.Group className="mb-3" controlId="maxGuests">
                     <Form.Label>Max Guests</Form.Label>
-                    <Form.Control type="number" value={roomData.info.maxGuests} name="maxGuests" onChange={handleInputChange} />
+                    <Form.Control type="number" value={roomData.maxGuests} name="maxGuests" onChange={handleInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="beds">
                     <Form.Label>Beds</Form.Label>
-                    <Form.Control type="number" value={roomData.info.beds} name="beds" onChange={handleInputChange} />
+                    <Form.Control type="number" value={roomData.beds} name='beds' onChange={handleInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="bathroom">
                     <Form.Label>Bathroom Type</Form.Label>
-                    <Form.Control type="text" value={roomData.info.bathroom} name="bathroom" onChange={handleInputChange} />
+                    <Form.Control type="text" value={roomData.bathroom} name="bathroom" onChange={handleInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="roomPrice">
                     <Form.Label>Room Price</Form.Label>
-                    <Form.Control type="number" value={roomData.price.roomPrice} name="roomPrice" onChange={handleInputChange} />
+                    <Form.Control type="number" value={roomData.roomPrice} name="roomPrice" onChange={handleInputChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="cleaningPrice">
                     <Form.Label>Cleaning Price</Form.Label>
-                    <Form.Control type="number" value={roomData.price.cleaningPrice} name="cleaningPrice" onChange={handleInputChange} />
+                    <Form.Control type="number" value={roomData.cleaningPrice} name="cleaningPrice" onChange={handleInputChange} />
                 </Form.Group>
 
 
