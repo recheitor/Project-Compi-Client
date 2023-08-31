@@ -48,8 +48,21 @@ const Navigation = () => {
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'#favs'} className='nav-link'>Favs</Link>
                                     </NavDropdown.Item>
+
                                     <NavDropdown.Item as={'div'}>
-                                        <Link to={'/add-your-house'} className='nav-link'>Add your house</Link>
+                                        <Link to={'/rooms'} className='nav-link'>Show Rooms Houses</Link>
+                                    </NavDropdown.Item>
+
+                                    <NavDropdown.Item as={'div'}>
+                                        <Link to={'/houses'} className='nav-link'>Show Houses</Link>
+                                    </NavDropdown.Item>
+
+
+                                    <NavDropdown.Item as={'div'}>
+                                        <Link to={'/rooms-create'} className='nav-link'>Add rooms to your houses</Link>
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item as={'div'}>
+                                        <Link to={'/house-create'} className='nav-link'>Add your house</Link>
                                     </NavDropdown.Item>
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'/account'} className='nav-link'>Account</Link>
