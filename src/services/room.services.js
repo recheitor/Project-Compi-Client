@@ -35,8 +35,9 @@ class RoomService {
         return this.api.post(`/${room_id}/edit`, roomData)
     }
 
-    deleteRoom(room_id) {
-        return this.api.post(`/${room_id}/delete`)
+    deleteRoom(room_id, house_id) {
+
+        return this.api.post(`/${room_id}/delete`, house_id)
     }
 }
 

@@ -27,8 +27,8 @@ class HouseService {
         return this.api.get('/get-all-houses')
     }
 
-    getHousesbyType(rent_type) {
-        return this.api.get(`/get-houses/${rent_type}`)
+    getHousesbyType(rent_type, searchQuery) {
+        return this.api.get(`/get-houses/${rent_type}?${searchQuery}`,)
     }
 
     getHousesbyOwnerId(user_id) {
