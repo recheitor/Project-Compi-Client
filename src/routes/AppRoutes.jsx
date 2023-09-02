@@ -12,6 +12,11 @@ import EditHousePage from '../pages/EditHousePage/EditHousePage'
 import EditRoomPage from '../pages/EditRoomPage/EditRoomPage'
 import AccountPage from '../pages/AccountPage/AccountPage'
 import PrivateRoutes from './PrivateRoutes'
+import EditProfilePage from '../pages/EditProfilePage/EditProfilePage'
+import UsersListPage from '../pages/UsersListPage/UsersListPage'
+import UserDetailsPage from '../pages/UserDetailsPage/UserDetailsPage'
+import ShowHousePageDetails from '../pages/ShowHousePageDetails/ShowHousePageDetails'
+
 // import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
 
 const AppRoutes = () => {
@@ -24,15 +29,20 @@ const AppRoutes = () => {
 
             <Route element={<PrivateRoutes />}>
                 <Route path={'/account'} element={<AccountPage />} />
+                <Route path={'/profile-edit/:id'} element={<EditProfilePage />} />
+                <Route path={'/users'} element={<UsersListPage />} />
+                <Route path={'/user/:id'} element={<UserDetailsPage />} />
                 <Route path={'/add-amenity'} element={<AddAmenityPage />} />
-                <Route path={'/house-create'} element={<AddHousePage />} />
-                <Route path={'/rooms'} element={<ShowHouseRoomsPage />} />
+
                 <Route path={'/houses'} element={<ShowHousesPage />} />
+                <Route path={'/houses/:house_id'} element={<ShowHousePageDetails />} />
+                <Route path={'/house-create'} element={<AddHousePage />} />
+                <Route path={'/house-edit/:id'} element={<EditHousePage />} />
+
+                <Route path={'/rooms'} element={<ShowHouseRoomsPage />} />
+                <Route path={'/rooms/:rooms_house_id'} element={<ShowHouseRoomsPageDetails />} />
                 <Route path={'/rooms-create'} element={<AddRoomPage />} />
                 <Route path={'/rooms-edit/:id'} element={<EditRoomPage />} />
-                <Route path={'/house-edit/:id'} element={<EditHousePage />} />
-                <Route path={'/rooms/:rooms_house_id'} element={<ShowHouseRoomsPageDetails />} />
-
 
             </Route>
 

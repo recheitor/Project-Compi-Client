@@ -2,13 +2,12 @@ import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from './../../contexts/auth.context'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import userService from '../../services/user.services'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
-const AccountPage = () => {
+const UserDetailsPage = () => {
 
     const { loggedUser } = useContext(AuthContext)
-    const { logout } = useContext(AuthContext)
-    const { _id: user_id } = loggedUser
+    const { id } = useParams()
 
     const navigate = useNavigate()
 
@@ -26,9 +25,9 @@ const AccountPage = () => {
     const getUserInfo = () => {
 
         userService
-            .user(user_id)
+            .user(id)
             .then(({ data: userDetails }) => {
-                setUserData((prevUserData) => ({ ...prevUserData, ...userDetails }))
+                setUserData({ ...userDetails })
             })
             .catch(err => console.log(err))
     }
@@ -36,10 +35,9 @@ const AccountPage = () => {
     const handleFormSubmit = e => {
         e.preventDefault()
         userService
-            .deleteUser(user_id)
+            .deleteUser(id)
             .then(() => {
-                logout()
-                navigate('/')
+                navigate('/users')
             })
             .catch(err => console.log(err))
     }
@@ -50,17 +48,14 @@ const AccountPage = () => {
 
     return (
         <Container className="AccountPage">
-
             <Row>
-
                 <Col md={{ span: 8, offset: 2 }}>
 
-                    <h1>{userData.firstName}'s account</h1>
-
-                    <Link to={`/profile-edit/${userData._id}`} className='btn btn-warning d-block' style={{ width: '200px' }}>Edit profile</Link>
                     <Form onSubmit={handleFormSubmit} >
                         <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete</Button>
                     </Form>
+
+                    <h1>{userData.firstName}'s account</h1>
 
                     <img src={userData.avatar} style={{ height: '100px' }} alt={`${userData.firstName} avatar`} />
                     <h2>{userData.firstName} {userData.lastName}</h2>
@@ -98,11 +93,9 @@ const AccountPage = () => {
                         })
                     }
                 </Col>
-
             </Row >
-
         </Container >
     )
 }
 
-export default AccountPage
+export default UserDetailsPage
