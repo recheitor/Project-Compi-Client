@@ -29,7 +29,7 @@ const AddRoomForm = () => {
         description: '',
         maxGuests: '',
         beds: '',
-        bathroom: '',
+        bathroom: 'Private',
         roomPrice: '',
         cleaningPrice: '',
         house_id: ''
@@ -55,7 +55,6 @@ const AddRoomForm = () => {
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
-
 
 
     const handleFileUpload = e => {
@@ -128,7 +127,10 @@ const AddRoomForm = () => {
 
                 <Form.Group className="mb-3" controlId="bathroom">
                     <Form.Label>Bathroom Type</Form.Label>
-                    <Form.Control type="text" value={roomData.bathroom} name="bathroom" onChange={handleInputChange} />
+                    <Form.Select size="sm" value={roomData.bathroom} name='bathroom' onChange={handleInputChange}>
+                        <option key='Private' value='Private'>Private</option>
+                        <option key='Shared' value='Shared'>Shared</option>
+                    </Form.Select>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="roomPrice">
@@ -144,7 +146,7 @@ const AddRoomForm = () => {
 
 
                 <div className="d-grid">
-                    <Button variant="dark" type="submit" disabled={loadingGallery}>
+                    <Button variant="dark" type="submit" disabled={loadingGallery} >
                         {loadingGallery ? 'Uploading gallery...' : 'Add Room'}</Button>
                 </div>
             </Form>

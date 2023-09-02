@@ -1,5 +1,8 @@
-import { Row, Col } from 'react-bootstrap'
-import houseServices from '../../services/house.services'
+import { Row, Col, Form, Button } from 'react-bootstrap'
+import houseService from '../../services/house.services'
+import roomService from '../../services/room.services'
+import { Link, useNavigate } from 'react-router-dom'
+
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
@@ -9,7 +12,7 @@ const HouseRoomsDetails = () => {
 
     const getHouseRoomForm = () => {
 
-        houseServices
+        houseService
             .getOneHouseRoom(rooms_house_id)
             .then(({ data: houseRoomDetails }) => {
 
@@ -27,6 +30,7 @@ const HouseRoomsDetails = () => {
         getHouseRoomForm()
     }, [])
 
+    const navigate = useNavigate()
 
     const [houseData, setHouseData] = useState({
         title: '',
@@ -53,6 +57,17 @@ const HouseRoomsDetails = () => {
         owner: ''
     })
 
+
+    const handleFormSubmit = (room_id) => e => {
+
+        e.preventDefault()
+
+        roomService
+            .deleteRoom(room_id, { house_id: rooms_house_id })
+            .then(() => navigate('/'))
+            .catch(err => console.log(err))
+    }
+
     return (
         <>
             <Row>
@@ -68,7 +83,7 @@ const HouseRoomsDetails = () => {
                     <p>House Owner: {houseData.owner.firstName} {houseData.owner.lastName} </p>
                     <p>House rating:
                         {
-                            !houseData.totalScore ? 'Not rated' : houseData.totalScore
+                            !houseData.totalScore ? ' Not rated' : houseData.totalScore
                         }
                     </p>
                     {
@@ -97,9 +112,10 @@ const HouseRoomsDetails = () => {
                                                 )
                                             })
                                         }
-
-
-
+                                        <Form onSubmit={handleFormSubmit(eachRoom._id)} >
+                                            <Button variant="dark" type="submit" >Delete</Button>
+                                        </Form>
+                                        <Link className='btn btn-dark' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
                                     </div>
                                 )
                             })
@@ -111,7 +127,7 @@ const HouseRoomsDetails = () => {
 
                 </Col>
 
-            </Row>
+            </Row >
         </>
     )
 }

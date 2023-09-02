@@ -1,15 +1,12 @@
-import { useCallback, useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Form, Button } from "react-bootstrap"
 import houseServices from '../../services/house.services'
 import { useNavigate, useParams } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
-import amenityService from '../../services/amenity.services'
-import { AuthContext } from '../../contexts/auth.context'
 
 const EditHouseForm = () => {
 
     const navigate = useNavigate()
-    const { loggedUser } = useContext(AuthContext)
     const { id } = useParams()
     const [loadingGallery, setLoadingGallery] = useState(false)
 
@@ -34,15 +31,14 @@ const EditHouseForm = () => {
             city: '',
             country: '',
         },
-        amenities: []
+
     })
 
     const getHouseForm = () => {
 
-        Promise.all([houseServices.getOneHouse(id), amenityService.getAllAmenities()])
-            .then(result => {
-                const houseDetails = result[0].data
-                const { data } = result[1]
+        houseServices
+            .getOneHouse(id)
+            .then(({ data: houseDetails }) => {
                 const { maxGuests, beds, bathrooms, rooms } = houseDetails.info
                 delete houseDetails.info
                 const { housePrice, cleaningPrice } = houseDetails.price
@@ -51,9 +47,10 @@ const EditHouseForm = () => {
                 delete houseDetails.address
                 const amenitiesArray = []
 
-                data.map(data => {
-                    amenitiesArray.push({ amenity: data._id, name: data.name, icon: data.icon, included: false })
+                houseDetails.amenities.map(amenity => {
+                    amenitiesArray.push({ amenity: amenity.amenity._id, name: amenity.amenity.name, icon: amenity.amenity.icon, included: amenity.included })
                 })
+
                 setHouseData({ ...houseData, ...houseDetails, maxGuests, beds, bathrooms, rooms, housePrice, cleaningPrice, street, number, zipcode, city, country, amenities: amenitiesArray })
             })
             .catch(err => console.log(err))
@@ -201,8 +198,8 @@ const EditHouseForm = () => {
                     {
                         houseData.amenities ?
                             houseData.amenities.map(elem => {
-                                return (
 
+                                return (
                                     <div key={`${elem.amenity}`} className="mb-3">
                                         <Form.Check
                                             type="checkbox"
@@ -213,10 +210,9 @@ const EditHouseForm = () => {
                                         />
                                     </div>
                                 )
-
                             })
                             :
-                            <h2>Loading...</h2>
+                            'load'
                     }
                 </Form.Group>
 

@@ -73,7 +73,11 @@ const HouseRoomsDetails = () => {
                                     <p>House price: {eachHouseData.price.housePrice}€ </p>
                                     <p>House Cleaning price: {eachHouseData.price.cleaningPrice}€ </p>
                                     <p>House Owner: {eachHouseData.owner.firstName} {eachHouseData.owner.lastName} </p>
-                                    <p>House rating: {eachHouseData.totalScore}</p>
+                                    <p>House rating:
+                                        {
+                                            !eachHouseData.totalScore ? ' Not rated' : eachHouseData.totalScore
+                                        }
+                                    </p>
                                     <Link to={`/rooms/${eachHouseData._id}`} className='btn btn-dark'>Details</Link>
 
                                     {
