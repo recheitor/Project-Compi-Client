@@ -6,14 +6,14 @@ import uploadServices from '../../services/upload.services'
 
 const AddAmenityForm = () => {
 
+    const navigate = useNavigate()
+    const [loadingIcon, setLoadingIcon] = useState(false)
+
     const [amenityData, setAmenityData] = useState({
         name: '',
         icon: ''
     })
 
-    const [loadingIcon, setLoadingIcon] = useState(false)
-
-    const navigate = useNavigate()
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget

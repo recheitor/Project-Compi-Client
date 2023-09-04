@@ -6,28 +6,9 @@ import { useEffect, useState } from 'react'
 
 
 const HouseDetails = () => {
-    const { house_id } = useParams()
-
-    const getHouseForm = () => {
-
-        houseService
-            .getOneHouse(house_id)
-            .then(({ data: houseDetails }) => {
-                let totalScore = 0
-                houseDetails.rating.forEach(({ score }) => totalScore += score)
-                totalScore = totalScore / houseDetails.rating.length
-                houseDetails.totalScore = totalScore
-                setHouseData(houseDetails)
-            }
-            )
-            .catch(err => console.log(err))
-    }
-
-    useEffect(() => {
-        getHouseForm()
-    }, [])
 
     const navigate = useNavigate()
+    const { house_id } = useParams()
 
     const [houseData, setHouseData] = useState({
         title: '',
@@ -53,6 +34,25 @@ const HouseDetails = () => {
         included: '',
         owner: ''
     })
+
+    useEffect(() => {
+        getHouseForm()
+    }, [])
+
+    const getHouseForm = () => {
+
+        houseService
+            .getOneHouse(house_id)
+            .then(({ data: houseDetails }) => {
+                let totalScore = 0
+                houseDetails.rating.forEach(({ score }) => totalScore += score)
+                totalScore = totalScore / houseDetails.rating.length
+                houseDetails.totalScore = totalScore
+                setHouseData(houseDetails)
+            }
+            )
+            .catch(err => console.log(err))
+    }
 
     const handleDeleteFormSubmit = e => {
 
@@ -122,11 +122,7 @@ const HouseDetails = () => {
 
                     <Link className='btn btn-dark' to={`/house-edit/${houseData._id}`}>Edit</Link>
 
-
-
-
                 </Col>
-
             </Row >
         </>
     )

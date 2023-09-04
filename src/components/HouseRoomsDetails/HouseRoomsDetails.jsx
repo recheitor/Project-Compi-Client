@@ -8,29 +8,9 @@ import { useEffect, useState } from 'react'
 
 
 const HouseRoomsDetails = () => {
-    const { rooms_house_id } = useParams()
-
-    const getHouseRoomForm = () => {
-
-        houseService
-            .getOneHouseRoom(rooms_house_id)
-            .then(({ data: houseRoomDetails }) => {
-
-                let totalScore = 0
-                houseRoomDetails.rating.forEach(({ score }) => totalScore += score)
-                totalScore = totalScore / houseRoomDetails.rating.length
-                houseRoomDetails.totalScore = totalScore
-                setHouseData(houseRoomDetails)
-            }
-            )
-            .catch(err => console.log(err))
-    }
-
-    useEffect(() => {
-        getHouseRoomForm()
-    }, [])
 
     const navigate = useNavigate()
+    const { rooms_house_id } = useParams()
 
     const [houseData, setHouseData] = useState({
         title: '',
@@ -57,6 +37,25 @@ const HouseRoomsDetails = () => {
         owner: ''
     })
 
+    useEffect(() => {
+        getHouseRoomForm()
+    }, [])
+
+    const getHouseRoomForm = () => {
+
+        houseService
+            .getOneHouseRoom(rooms_house_id)
+            .then(({ data: houseRoomDetails }) => {
+
+                let totalScore = 0
+                houseRoomDetails.rating.forEach(({ score }) => totalScore += score)
+                totalScore = totalScore / houseRoomDetails.rating.length
+                houseRoomDetails.totalScore = totalScore
+                setHouseData(houseRoomDetails)
+            }
+            )
+            .catch(err => console.log(err))
+    }
 
     const handleFormSubmit = (room_id) => e => {
 
@@ -127,11 +126,7 @@ const HouseRoomsDetails = () => {
                             :
                             ''
                     }
-
-
-
                 </Col>
-
             </Row >
         </>
     )

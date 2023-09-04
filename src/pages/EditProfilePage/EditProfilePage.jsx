@@ -7,7 +7,6 @@ const EditProfilePage = () => {
         <Container className="EditProfilePage">
             <Row>
                 <Col md={{ span: 8, offset: 2 }}>
-
                     <h1>Edit profile</h1>
                     <hr />
                     <EditProfileForm />

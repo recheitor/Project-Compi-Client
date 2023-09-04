@@ -8,58 +8,6 @@ let filterBy = {}
 
 const Houses = () => {
 
-    const [filterData, setFilterData] = useState({
-        beds: '',
-        bathrooms: '',
-        maxGuests: '',
-        rooms: '',
-        price: ''
-    })
-
-    const handleInputChange = e => {
-        const { name, value } = e.currentTarget
-
-        filterBy = { ...filterBy, [name]: value }
-
-        let filterQuery = ''
-        for (const property in filterBy) {
-            filterQuery += `&${property}=${filterBy[property]}`
-
-
-        }
-        filterQuery = filterQuery.slice(1)
-
-        getHouseRoomFormQuery(filterQuery)
-        setFilterData({ ...filterData, ...filterBy })
-    }
-
-
-
-    const getHouseRoomFormQuery = (filterBy) => {
-        filterBy = filterBy ? filterBy : []
-        houseServices
-
-            .getHousesbyType('entire', filterBy)
-            .then(({ data: RoomDetails }) => {
-
-                RoomDetails.forEach(eachHouse => {
-                    let totalScore = 0
-                    eachHouse.rating.forEach(({ score }) => totalScore += score)
-                    totalScore = totalScore / eachHouse.rating.length
-                    eachHouse.totalScore = totalScore
-                })
-                setHouseData(RoomDetails)
-            }
-            )
-            .catch(err => console.log(err))
-    }
-
-    useEffect(() => {
-
-        getHouseRoomFormQuery()
-    }, [])
-
-
     const [houseData, setHouseData] = useState([{
         title: '',
         gallery: [],
@@ -83,6 +31,54 @@ const Houses = () => {
         included: '',
         owner: ''
     }])
+
+    const [filterData, setFilterData] = useState({
+        beds: '',
+        bathrooms: '',
+        maxGuests: '',
+        rooms: '',
+        price: ''
+    })
+
+    useEffect(() => {
+        getHouseRoomFormQuery()
+    }, [])
+
+    const getHouseRoomFormQuery = (filterBy) => {
+        filterBy = filterBy ? filterBy : []
+        houseServices
+
+            .getHousesbyType('entire', filterBy)
+            .then(({ data: RoomDetails }) => {
+
+                RoomDetails.forEach(eachHouse => {
+                    let totalScore = 0
+                    eachHouse.rating.forEach(({ score }) => totalScore += score)
+                    totalScore = totalScore / eachHouse.rating.length
+                    eachHouse.totalScore = totalScore
+                })
+                setHouseData(RoomDetails)
+            }
+            )
+            .catch(err => console.log(err))
+    }
+
+    const handleInputChange = e => {
+        const { name, value } = e.currentTarget
+
+        filterBy = { ...filterBy, [name]: value }
+
+        let filterQuery = ''
+        for (const property in filterBy) {
+            filterQuery += `&${property}=${filterBy[property]}`
+
+
+        }
+        filterQuery = filterQuery.slice(1)
+
+        getHouseRoomFormQuery(filterQuery)
+        setFilterData({ ...filterData, ...filterBy })
+    }
 
     return (
         <>
@@ -144,18 +140,12 @@ const Houses = () => {
                                         }
                                         <hr />
                                     </div>
-
-
                                 )
                             })
                             :
                             ''
-
                     }
-
-
                 </Col>
-
             </Row>
         </>
     )

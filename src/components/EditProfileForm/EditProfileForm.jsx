@@ -10,7 +10,6 @@ const EditProfileForm = () => {
 
     const navigate = useNavigate()
     const { id } = useParams()
-
     const [loadingAvatar, setLoadingAvatar] = useState(false)
 
     const [userData, setUserData] = useState({
@@ -19,6 +18,10 @@ const EditProfileForm = () => {
         lastName: '',
         bio: ''
     })
+
+    useEffect(() => {
+        getProfileForm()
+    }, [])
 
     const getProfileForm = () => {
 
@@ -29,10 +32,6 @@ const EditProfileForm = () => {
             })
             .catch(err => console.log(err))
     }
-
-    useEffect(() => {
-        getProfileForm()
-    }, [])
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget

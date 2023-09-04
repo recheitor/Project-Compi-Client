@@ -7,6 +7,10 @@ import amenityService from '../../services/amenity.services'
 
 const AddHouseForm = () => {
 
+    const navigate = useNavigate()
+    // const [amenities, setAmenities] = useState([])
+    const [loadingGallery, setLoadingGallery] = useState(false)
+
     const [houseData, setHouseData] = useState({
         title: '',
         gallery: '',
@@ -25,12 +29,9 @@ const AddHouseForm = () => {
         amenities: [],
     })
 
-    // const [amenities, setAmenities] = useState([])
     useEffect(() => {
         loadAmenities()
     }, [])
-
-
 
     const loadAmenities = () => {
         amenityService
@@ -45,10 +46,6 @@ const AddHouseForm = () => {
 
             .catch(err => console.log(err))
     }
-
-    const [loadingGallery, setLoadingGallery] = useState(false)
-
-    const navigate = useNavigate()
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
@@ -79,6 +76,7 @@ const AddHouseForm = () => {
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
+
     const handleFileUpload = e => {
 
         setLoadingGallery(true)

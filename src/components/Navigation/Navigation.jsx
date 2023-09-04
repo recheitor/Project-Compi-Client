@@ -20,8 +20,8 @@ const Navigation = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Link to={'/'} className='nav-link'>Home</Link>
-
                     </Nav>
+
                     <div className="d-flex">
                         <NavDropdown
                             title={`Hello, ${loggedUser ? loggedUser.firstName : 'guest'}! `}
@@ -45,6 +45,7 @@ const Navigation = () => {
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'#messages'} className='nav-link'>Messages</Link>
                                     </NavDropdown.Item>
+
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'#favs'} className='nav-link'>Favs</Link>
                                     </NavDropdown.Item>
@@ -57,13 +58,14 @@ const Navigation = () => {
                                         <Link to={'/houses'} className='nav-link'>Show Houses</Link>
                                     </NavDropdown.Item>
 
-
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'/rooms-create'} className='nav-link'>Add rooms to your houses</Link>
                                     </NavDropdown.Item>
+
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'/house-create'} className='nav-link'>Add your house</Link>
                                     </NavDropdown.Item>
+
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'/account'} className='nav-link'>Account</Link>
                                     </NavDropdown.Item>

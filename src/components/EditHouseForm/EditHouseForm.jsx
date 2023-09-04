@@ -34,6 +34,10 @@ const EditHouseForm = () => {
 
     })
 
+    useEffect(() => {
+        getHouseForm()
+    }, [])
+
     const getHouseForm = () => {
 
         houseServices
@@ -55,10 +59,6 @@ const EditHouseForm = () => {
             })
             .catch(err => console.log(err))
     }
-
-    useEffect(() => {
-        getHouseForm()
-    }, [])
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget

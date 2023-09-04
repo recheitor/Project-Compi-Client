@@ -34,11 +34,11 @@ import { AuthContext } from '../../contexts/auth.context'
 //         //     ref: 'Rating'
 //         // }],
 
-
-
-
-
 const BookingForm = () => {
+
+    const navigate = useNavigate()
+    const { loggedUser } = useContext(AuthContext)
+    const { room_id } = useParams()
 
     const [bookingData, setBookingData] = useState({
         bookingDates: {
@@ -47,10 +47,9 @@ const BookingForm = () => {
         }
     })
 
-    const { room_id } = useParams()
-    const { loggedUser } = useContext(AuthContext)
-
-    const navigate = useNavigate()
+    useEffect(() => {
+        getBookings()
+    }, [])
 
     const getBookings = () => {
         bookingServices
@@ -58,10 +57,6 @@ const BookingForm = () => {
             .then(({ data }) => setBookingData({ ...roomData, house: data }))
             .catch(err => console.log(err))
     }
-
-    useEffect(() => {
-        getBookings()
-    }, [])
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget

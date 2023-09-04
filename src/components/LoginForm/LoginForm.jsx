@@ -7,14 +7,13 @@ import { AuthContext } from "../../contexts/auth.context"
 
 const LoginForm = () => {
 
+    const navigate = useNavigate()
+    const { authenticateUser, storeToken } = useContext(AuthContext)
+
     const [loginData, setLoginData] = useState({
         email: '',
         password: ''
     })
-
-    const navigate = useNavigate()
-
-    const { authenticateUser, storeToken } = useContext(AuthContext)
 
     const handleInputChange = e => {
         const { value, name } = e.target
@@ -36,9 +35,7 @@ const LoginForm = () => {
     }
 
     return (
-
         <Form onSubmit={handleSubmit}>
-
             <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" value={loginData.email} onChange={handleInputChange} name="email" />
@@ -52,7 +49,6 @@ const LoginForm = () => {
             <div className="d-grid">
                 <Button variant="dark" type="submit">Login</Button>
             </div>
-
         </Form>
     )
 }

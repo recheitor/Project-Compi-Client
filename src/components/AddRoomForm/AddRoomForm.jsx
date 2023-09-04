@@ -9,18 +9,9 @@ import { AuthContext } from "../../contexts/auth.context"
 
 const AddRoomForm = () => {
 
+    const navigate = useNavigate()
     const { loggedUser } = useContext(AuthContext)
-
-    const getHousesForm = () => {
-        houseServices
-            .getHousesbyOwnerId(loggedUser._id)
-            .then(({ data }) => setRoomData({ ...roomData, house: data }))
-            .catch(err => console.log(err))
-    }
-
-    useEffect(() => {
-        getHousesForm()
-    }, [])
+    const [loadingGallery, setLoadingGallery] = useState(false)
 
     const [roomData, setRoomData] = useState({
         house: [],
@@ -35,16 +26,21 @@ const AddRoomForm = () => {
         house_id: ''
     })
 
+    useEffect(() => {
+        getHousesForm()
+    }, [])
 
-    const [loadingGallery, setLoadingGallery] = useState(false)
-
-    const navigate = useNavigate()
+    const getHousesForm = () => {
+        houseServices
+            .getHousesbyOwnerId(loggedUser._id)
+            .then(({ data }) => setRoomData({ ...roomData, house: data }))
+            .catch(err => console.log(err))
+    }
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
         setRoomData({ ...roomData, [name]: value })
     }
-
 
     const handleFormSubmit = e => {
 
@@ -55,7 +51,6 @@ const AddRoomForm = () => {
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
-
 
     const handleFileUpload = e => {
 
