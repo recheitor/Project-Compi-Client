@@ -112,10 +112,15 @@ const HouseRoomsDetails = () => {
                                                 )
                                             })
                                         }
+                                        <br />
+                                        <br />
+                                        <Link className='btn btn-dark' to={`/booking/${eachRoom._id}`}>Booking</Link>
+                                        <br />
+                                        <br />
                                         <Form onSubmit={handleFormSubmit(eachRoom._id)} >
-                                            <Button variant="dark" type="submit" >Delete</Button>
+                                            <Button variant="danger" type="submit" >Delete</Button>
                                         </Form>
-                                        <Link className='btn btn-dark' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
+                                        <Link className='btn btn-warning' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
                                     </div>
                                 )
                             })

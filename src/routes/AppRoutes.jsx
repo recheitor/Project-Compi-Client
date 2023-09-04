@@ -16,6 +16,7 @@ import EditProfilePage from '../pages/EditProfilePage/EditProfilePage'
 import UsersListPage from '../pages/UsersListPage/UsersListPage'
 import UserDetailsPage from '../pages/UserDetailsPage/UserDetailsPage'
 import ShowHousePageDetails from '../pages/ShowHousePageDetails/ShowHousePageDetails'
+import BookingPage from '../pages/BookingPage/BookingPage'
 
 // import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
 
@@ -44,6 +45,7 @@ const AppRoutes = () => {
                 <Route path={'/rooms-create'} element={<AddRoomPage />} />
                 <Route path={'/rooms-edit/:id'} element={<EditRoomPage />} />
 
+                <Route path={'/booking/:rooms_house_id'} element={<BookingPage />} />
             </Route>
 
             {/* <Route path={'*'} element={<NotFoundPage />} /> */}
