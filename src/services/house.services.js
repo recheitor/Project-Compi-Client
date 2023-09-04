@@ -47,6 +47,13 @@ class HouseService {
         return this.api.post(`/${house_id}/edit`, houseData)
     }
 
+    addFavoriteHouse(house_id) {
+        return this.api.post(`/${house_id}/add-favorite`)
+    }
+
+    deleteFavoriteHouse(house_id) {
+        return this.api.post(`/${house_id}/delete-favorite`)
+    }
     deleteHouse(house_id) {
         return this.api.post(`/${house_id}/delete`)
     }
