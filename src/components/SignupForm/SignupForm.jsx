@@ -6,15 +6,14 @@ import { useNavigate } from "react-router-dom"
 
 const SignupForm = () => {
 
+    const navigate = useNavigate()
+
     const [signupData, setSignupData] = useState({
         firstName: '',
         lastName: '',
         email: '',
         password: ''
     })
-
-    const navigate = useNavigate()
-
 
     const handleInputChange = e => {
         const { value, name } = e.target

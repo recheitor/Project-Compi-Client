@@ -6,11 +6,10 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const AccountPage = () => {
 
+    const navigate = useNavigate()
     const { loggedUser } = useContext(AuthContext)
     const { logout } = useContext(AuthContext)
     const { _id: user_id } = loggedUser
-
-    const navigate = useNavigate()
 
     const [userData, setUserData] = useState({
         firstName: '',
@@ -22,6 +21,10 @@ const AccountPage = () => {
         bio: '',
         favorites: []
     })
+
+    useEffect(() => {
+        getUserInfo()
+    }, [])
 
     const getUserInfo = () => {
 
@@ -44,15 +47,9 @@ const AccountPage = () => {
             .catch(err => console.log(err))
     }
 
-    useEffect(() => {
-        getUserInfo()
-    }, [])
-
     return (
         <Container className="AccountPage">
-
             <Row>
-
                 <Col md={{ span: 8, offset: 2 }}>
 
                     <h1>{userData.firstName}'s account</h1>
@@ -98,9 +95,7 @@ const AccountPage = () => {
                         })
                     }
                 </Col>
-
             </Row >
-
         </Container >
     )
 }

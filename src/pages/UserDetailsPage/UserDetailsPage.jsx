@@ -6,10 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const UserDetailsPage = () => {
 
+    const navigate = useNavigate()
     const { loggedUser } = useContext(AuthContext)
     const { id } = useParams()
-
-    const navigate = useNavigate()
 
     const [userData, setUserData] = useState({
         firstName: '',
@@ -21,6 +20,10 @@ const UserDetailsPage = () => {
         bio: '',
         favorites: []
     })
+
+    useEffect(() => {
+        getUserInfo()
+    }, [])
 
     const getUserInfo = () => {
 
@@ -41,10 +44,6 @@ const UserDetailsPage = () => {
             })
             .catch(err => console.log(err))
     }
-
-    useEffect(() => {
-        getUserInfo()
-    }, [])
 
     return (
         <Container className="AccountPage">

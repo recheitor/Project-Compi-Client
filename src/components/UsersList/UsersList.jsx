@@ -12,6 +12,10 @@ const UsersList = () => {
         rating: []
     }])
 
+    useEffect(() => {
+        getUsersList()
+    }, [])
+
     const getUsersList = () => {
 
         userServices
@@ -30,10 +34,6 @@ const UsersList = () => {
             })
             .catch(err => console.log(err))
     }
-
-    useEffect(() => {
-        getUsersList()
-    }, [])
 
     return (
         <Row>

@@ -5,21 +5,13 @@ const AddAmenityPage = () => {
 
     return (
         <Container className="AddAmenityPage">
-
             <Row>
-
                 <Col md={{ span: 8, offset: 2 }}>
-
                     <h1>Add amenity</h1>
-
                     <hr />
-
                     <AddAmenityForm />
-
                 </Col>
-
             </Row>
-
         </Container>
     )
 }

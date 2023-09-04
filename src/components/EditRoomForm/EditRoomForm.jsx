@@ -8,7 +8,24 @@ import uploadServices from '../../services/upload.services'
 
 const EditRoomForm = () => {
 
+    const navigate = useNavigate()
     const { id } = useParams()
+    const [loadingGallery, setLoadingGallery] = useState(false)
+
+    const [roomData, setRoomData] = useState({
+        title: '',
+        gallery: [],
+        description: '',
+        maxGuests: '',
+        beds: '',
+        bathroom: '',
+        roomPrice: '',
+        cleaningPrice: '',
+    })
+
+    useEffect(() => {
+        getHousesForm()
+    }, [])
 
     const getHousesForm = () => {
 
@@ -25,30 +42,10 @@ const EditRoomForm = () => {
             .catch(err => console.log(err))
     }
 
-    useEffect(() => {
-        getHousesForm()
-    }, [])
-
-    const [roomData, setRoomData] = useState({
-        title: '',
-        gallery: [],
-        description: '',
-        maxGuests: '',
-        beds: '',
-        bathroom: '',
-        roomPrice: '',
-        cleaningPrice: '',
-    })
-
-    const [loadingGallery, setLoadingGallery] = useState(false)
-
-    const navigate = useNavigate()
-
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
         setRoomData({ ...roomData, [name]: value })
     }
-
 
     const handleFormSubmit = e => {
 
@@ -104,7 +101,6 @@ const EditRoomForm = () => {
                     <Form.Control type="file" multiple onChange={handleFileUpload} />
                 </Form.Group>
 
-
                 <Form.Group className="mb-3" controlId="description">
                     <Form.Label>Description</Form.Label>
                     <Form.Control type="text" value={roomData.description} name="description" onChange={handleInputChange} />
@@ -134,8 +130,6 @@ const EditRoomForm = () => {
                     <Form.Label>Cleaning Price</Form.Label>
                     <Form.Control type="number" value={roomData.cleaningPrice} name="cleaningPrice" onChange={handleInputChange} />
                 </Form.Group>
-
-
 
                 <div className="d-grid">
                     <Button variant="dark" type="submit" disabled={loadingGallery}>
