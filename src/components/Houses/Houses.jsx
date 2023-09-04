@@ -1,4 +1,4 @@
-import { Row, Col, Button, Form } from 'react-bootstrap'
+import { Row, Col, Form } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -8,23 +8,13 @@ let filterBy = {}
 
 const Houses = () => {
 
-
-
-    // const filterButton = e => {
-    //     const { name, value } = e.target
-    //     const filterBy = `${name}=${value}`
-    //     getHouseRoomFormQuery(filterBy)
-    // }
-
-
-
     const [filterData, setFilterData] = useState({
         beds: '',
-        bathrooms: ''
-
+        bathrooms: '',
+        maxGuests: '',
+        rooms: '',
+        price: ''
     })
-
-
 
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
@@ -98,30 +88,30 @@ const Houses = () => {
         <>
             <Row>
                 <Col>
-
-
-                    {/* <Form.Group className="mb-3" controlId="house">
-                        <Form.Select size="sm" name='sort' onChange={handleInputChange}>
-                            <option key='Select' >Renting type</option>
-                            <option key='entire' value='entire' >Entire houses</option>
-                            <option key='rooms' value='rooms' >Private Rooms</option>
-                        </Form.Select>
-                    </Form.Group> */}
-
-
-                    {/* <Button key='price' variant="dark" value='1000' name='price' onClick={filterButton} >Filter price</Button> */}
-                    {/* <Button key='beds' variant="dark" value='1' name='beds' onClick={filterButton} >Filter beds</Button> */}
-                    {/* <Button key='sortBeds' variant="dark" value='beds' name='sort' onClick={filterButton} >sort beds</Button> */}
-
-                    <Form.Group className="mb-3" controlId="lastName">
+                    <Form.Group className="mb-3" controlId="beds">
                         <Form.Label>Min Beds</Form.Label>
                         <Form.Control type="number" value={filterData.beds} onChange={handleInputChange} name="beds" />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="lastName">
+
+                    <Form.Group className="mb-3" controlId="bathrooms">
                         <Form.Label>Min Bathrooms</Form.Label>
                         <Form.Control type="number" value={filterData.bathrooms} onChange={handleInputChange} name="bathrooms" />
                     </Form.Group>
 
+                    <Form.Group className="mb-3" controlId="maxGuests">
+                        <Form.Label>Max Guests</Form.Label>
+                        <Form.Control type="number" value={filterData.maxGuests} onChange={handleInputChange} name="maxGuests" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="rooms">
+                        <Form.Label>Min Rooms</Form.Label>
+                        <Form.Control type="number" value={filterData.rooms} onChange={handleInputChange} name="rooms" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="price">
+                        <Form.Label>Max Price</Form.Label>
+                        <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
+                    </Form.Group>
                     {
                         houseData ?
 
@@ -152,8 +142,6 @@ const Houses = () => {
                                                 )
                                             })
                                         }
-
-
                                         <hr />
                                     </div>
 

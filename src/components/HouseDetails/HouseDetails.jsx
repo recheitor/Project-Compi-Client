@@ -1,7 +1,6 @@
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import houseService from '../../services/house.services'
 import { Link, useNavigate } from 'react-router-dom'
-
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
@@ -55,13 +54,32 @@ const HouseDetails = () => {
         owner: ''
     })
 
-
-    const handleFormSubmit = e => {
+    const handleDeleteFormSubmit = e => {
 
         e.preventDefault()
 
         houseService
             .deleteHouse(house_id)
+            .then(() => navigate('/'))
+            .catch(err => console.log(err))
+    }
+
+    const handleAddFavoriteSubmit = e => {
+
+        e.preventDefault()
+
+        houseService
+            .addFavoriteHouse(house_id)
+            .then(() => navigate('/'))
+            .catch(err => console.log(err))
+    }
+
+    const handleDeleteFavoriteSubmit = e => {
+
+        e.preventDefault()
+
+        houseService
+            .deleteFavoriteHouse(house_id)
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
@@ -91,9 +109,17 @@ const HouseDetails = () => {
                             )
                         })
                     }
-                    <Form onSubmit={handleFormSubmit} >
+                    <Form onSubmit={handleDeleteFormSubmit} >
                         <Button variant="dark" type="submit" >Delete</Button>
                     </Form>
+
+                    <Form onSubmit={handleAddFavoriteSubmit} >
+                        <Button variant="dark" type="submit" >Add favorite</Button>
+                    </Form>
+                    <Form onSubmit={handleDeleteFavoriteSubmit} >
+                        <Button variant="dark" type="submit" >Remove favorite</Button>
+                    </Form>
+
                     <Link className='btn btn-dark' to={`/house-edit/${houseData._id}`}>Edit</Link>
 
 
