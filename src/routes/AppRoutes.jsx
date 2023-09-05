@@ -17,7 +17,6 @@ import UsersListPage from '../pages/UsersListPage/UsersListPage'
 import UserDetailsPage from '../pages/UserDetailsPage/UserDetailsPage'
 import ShowHousePageDetails from '../pages/ShowHousePageDetails/ShowHousePageDetails'
 import BookingPage from '../pages/BookingPage/BookingPage'
-// import MapsPage from '../pages/MapsPage/MapsPage'
 
 // import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
 
@@ -47,8 +46,6 @@ const AppRoutes = () => {
                 <Route path={'/rooms-edit/:id'} element={<EditRoomPage />} />
 
                 <Route path={'/booking/:rooms_house_id'} element={<BookingPage />} />
-
-                {/* <Route path={'/maps'} element={<MapsPage />} /> */}
             </Route>
 
             {/* <Route path={'*'} element={<NotFoundPage />} /> */}

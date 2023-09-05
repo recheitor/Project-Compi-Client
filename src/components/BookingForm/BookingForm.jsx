@@ -1,60 +1,37 @@
-import { useContext, useState } from "react"
+import { useEffect, useState } from "react"
 import { Form, Button } from "react-bootstrap"
 import bookingServices from '../../services/booking.services'
-import roomService from '../../services/room.services'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AuthContext } from '../../contexts/auth.context'
 
-
-
-// room: {
-//     type: Schema.Types.ObjectId,
-//         ref: 'Room'
-// },
-// user: {
-//     type: Schema.Types.ObjectId,
-//         ref: 'User'
-// },
-// bookingDates: {
-//     entry: {
-//         type: Date,
-//             },
-//     exit: {
-//         type: Date,
-//             }
-// },
-// // guestsNumber: {
-// //     type: Number,
-// // },
-// price: {
-//     type: Number,
-//         },
-//         // rating: [{
-//         //     type: Schema.Types.ObjectId,
-//         //     ref: 'Rating'
-//         // }],
+import Calendar from '../DayPicker/DayPicker'
 
 const BookingForm = () => {
 
     const navigate = useNavigate()
-    const { loggedUser } = useContext(AuthContext)
     const { room_id } = useParams()
 
+    const [allBookingsData, setAllBookingsData] = useState([])
+    const [bookingConflict, setBookingConflict] = useState()
+
     const [bookingData, setBookingData] = useState({
-        bookingDates: {
-            entry: Date,
-            exit: Date
-        }
+        room: room_id,
+        entry: '',
+        exit: '',
+        price: 0
     })
 
     useEffect(() => {
         getBookings()
-    }, [])
+    }, [!allBookingsData.length])
 
     const getBookings = () => {
         bookingServices
-            .getAllBookings()
-            .then(({ data }) => setBookingData({ ...roomData, house: data }))
+            .getAllRoomBookings(room_id)
+            .then(({ data }) => {
+                console.log('DATA', data)
+                setAllBookingsData(data)
+                console.log('ALLBOOKINGSDATA', allBookingsData)
+            })
             .catch(err => console.log(err))
     }
 
@@ -62,25 +39,50 @@ const BookingForm = () => {
         const { value, name } = e.currentTarget
         setBookingData({ ...bookingData, [name]: value })
     }
+    let conflicto = false
+    const conflict = () => {
+        allBookingsData.forEach(eachBooking => {
+
+            if ((bookingData.entry >= eachBooking.bookingDates.entry && bookingData.entry <= eachBooking.bookingDates.exit) ||
+                (bookingData.exit >= eachBooking.bookingDates.entry && bookingData.exit <= eachBooking.bookingDates.exit)) {
+                console.log("no puedes reservar")
+                conflicto = true
+                console.log(conflicto)
+            }
+        })
+    }
 
     const handleFormSubmit = e => {
 
         e.preventDefault()
 
-        bookingServices
-            .createBooking(bookingData)
-            .then(() => navigate('/'))
-            .catch(err => console.log(err))
+        conflict()
+
+        setTimeout(() => {
+            if (!conflicto) {
+                bookingServices
+                    .createBooking(bookingData)
+                    .then(() => {
+                        console.log('SI')
+                        // navigate('/')
+                    })
+                    .catch(err => console.log(err))
+            }
+        }, 2000);
+
     }
 
     return (
         <div className="BookingForm">
+
+            <Calendar />
+
             <Form onSubmit={handleFormSubmit}>
                 <Form.Group className="mb-3" controlId="entry">
                     <Form.Label>Entry</Form.Label>
                     <Form.Control
                         type="date"
-                        value={bookingData.bookingDates.entry}
+                        value={bookingData.entry}
                         name="entry"
                         onChange={handleInputChange}
                     />
@@ -90,14 +92,14 @@ const BookingForm = () => {
                     <Form.Label>Exit</Form.Label>
                     <Form.Control
                         type="date"
-                        value={bookingData.bookingDates.exit}
+                        value={bookingData.exit}
                         name="exit"
                         onChange={handleInputChange}
                     />
                 </Form.Group>
 
                 <div className="d-grid">
-                    <Button variant="dark" type="submit">Booking</Button>
+                    <Button variant="dark" type="submit">{bookingConflict ? "no reservas" : "reserva"}</Button>
                 </div>
             </Form>
         </div>
