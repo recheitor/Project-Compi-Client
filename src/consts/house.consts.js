@@ -1,0 +1,1 @@
+export const HOUSE_INITIAL_COORDS = { lat: 40.3930, lng: -3.70357777 }

@@ -7,8 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 const AccountPage = () => {
 
     const navigate = useNavigate()
-    const { loggedUser } = useContext(AuthContext)
-    const { logout } = useContext(AuthContext)
+    const { loggedUser, logout } = useContext(AuthContext)
     const { _id: user_id } = loggedUser
 
     const [userData, setUserData] = useState({
@@ -69,9 +68,9 @@ const AccountPage = () => {
                     <h3>Favs:</h3>
                     <ul>
                         {
-                            userData.favorites.map((eachFav, idx) => {
+                            userData.favorites.map(({ title }, idx) => {
                                 return (
-                                    <li key={idx}>{eachFav.title}</li>
+                                    <li key={idx}>{title}</li>
                                 )
                             })
                         }
@@ -81,13 +80,13 @@ const AccountPage = () => {
                     <h3>Ratings:</h3>
                     <br />
                     {
-                        userData.rating.map((eachRating, idx) => {
+                        userData.rating.map(({ score, userId, comment }, idx) => {
                             return (
                                 <div key={idx}>
                                     <ul>
-                                        <li>{eachRating.score}</li>
-                                        <li>{eachRating.userId.firstName} {eachRating.userId.lastName}</li>
-                                        <li>{eachRating.comment}</li>
+                                        <li>{score}</li>
+                                        <li>{userId.firstName} {userId.lastName}</li>
+                                        <li>{comment}</li>
                                     </ul>
                                     <hr />
                                 </div>
