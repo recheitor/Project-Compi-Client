@@ -1,8 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap'
 import BookingForm from '../../components/BookingForm/BookingForm'
-
 const BookingPage = () => {
-
     return (
         <Container className="BookingPage">
             <Row>
@@ -15,5 +13,4 @@ const BookingPage = () => {
         </Container>
     )
 }
-
 export default BookingPage

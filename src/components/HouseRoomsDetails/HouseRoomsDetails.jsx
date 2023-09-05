@@ -7,6 +7,7 @@ import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
 
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts';
 
 
 const HouseRoomsDetails = () => {
@@ -38,7 +39,7 @@ const HouseRoomsDetails = () => {
         included: '',
         owner: '',
         location: {
-            coordinates: { lat: 40.3930, lng: -3.70357777 }
+            coordinates: HOUSE_INITIAL_COORDS
         }
     })
 

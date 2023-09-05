@@ -8,7 +8,7 @@ import Calendar from '../DayPicker/DayPicker'
 const BookingForm = () => {
 
     const navigate = useNavigate()
-    const { room_id } = useParams()
+    const { rooms_house_id: room_id } = useParams()
 
     const [allBookingsData, setAllBookingsData] = useState([])
     const [bookingConflict, setBookingConflict] = useState()

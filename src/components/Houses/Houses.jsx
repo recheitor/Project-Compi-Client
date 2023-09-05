@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
 
-
+// TODO: MEJORAR LA CREACIÓN DE URL -> https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/set
 
 let filterBy = {}
 
@@ -49,7 +49,6 @@ const Houses = () => {
     const getHouseRoomFormQuery = (filterBy) => {
         filterBy = filterBy ? filterBy : []
         houseServices
-
             .getHousesbyType('entire', filterBy)
             .then(({ data: houseDetails }) => {
 

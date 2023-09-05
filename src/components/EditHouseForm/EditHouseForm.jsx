@@ -49,10 +49,9 @@ const EditHouseForm = () => {
                 delete houseDetails.price
                 const { street, number, zipcode, city, country } = houseDetails.address
                 delete houseDetails.address
-                const amenitiesArray = []
 
-                houseDetails.amenities.map(amenity => {
-                    amenitiesArray.push({ amenity: amenity.amenity._id, name: amenity.amenity.name, icon: amenity.amenity.icon, included: amenity.included })
+                const amenitiesArray = houseDetails.amenities.map(amenity => {
+                    return { amenity: amenity.amenity._id, name: amenity.amenity.name, icon: amenity.amenity.icon, included: amenity.included }
                 })
 
                 setHouseData({ ...houseData, ...houseDetails, maxGuests, beds, bathrooms, rooms, housePrice, cleaningPrice, street, number, zipcode, city, country, amenities: amenitiesArray })

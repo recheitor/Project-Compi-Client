@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts'
 
 
 
@@ -36,7 +37,7 @@ const HouseDetails = () => {
         included: '',
         owner: '',
         location: {
-            coordinates: { lat: 40.3930, lng: -3.70357777 }
+            coordinates: HOUSE_INITIAL_COORDS
         }
 
     })

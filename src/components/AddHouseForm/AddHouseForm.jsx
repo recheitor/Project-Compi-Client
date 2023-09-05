@@ -38,9 +38,8 @@ const AddHouseForm = () => {
         amenityService
             .getAllAmenities()
             .then(({ data }) => {
-                const amenitiesArray = []
-                data.map(data => {
-                    amenitiesArray.push({ amenity: data._id, name: data.name, icon: data.icon, included: false })
+                const amenitiesArray = data.map(data => {
+                    return { amenity: data._id, name: data.name, icon: data.icon, included: false }
                 })
                 setHouseData({ ...houseData, amenities: amenitiesArray })
             })
