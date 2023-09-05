@@ -45,8 +45,6 @@ const HouseDetails = () => {
         getHouseForm()
     }, [])
 
-
-
     const getHouseForm = () => {
 
         houseService
@@ -66,7 +64,7 @@ const HouseDetails = () => {
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        libraries: ['places']
+
     })
 
     if (!isLoaded) {

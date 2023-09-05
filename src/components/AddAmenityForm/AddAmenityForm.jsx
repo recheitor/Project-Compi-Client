@@ -14,7 +14,6 @@ const AddAmenityForm = () => {
         icon: ''
     })
 
-
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
         setAmenityData({ ...amenityData, [name]: value })
