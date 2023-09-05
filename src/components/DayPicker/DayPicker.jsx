@@ -2,12 +2,12 @@ import { useState } from "react"
 import { addDays, format } from 'date-fns'
 import { DayPicker } from 'react-day-picker'
 
-const pastMonth = new Date(2020, 10, 15);
+const thisMonth = new Date(2023, 8, 5);
 
 function Calendar() {
     const defaultSelected = {
-        from: pastMonth,
-        to: addDays(pastMonth, 4)
+        from: thisMonth,
+        to: addDays(thisMonth, 4)
     };
     const [range, setRange] = useState(defaultSelected);
 
@@ -23,11 +23,15 @@ function Calendar() {
         }
     }
 
+    console.log('DESDE: ', range.from)
+    console.log('HASTA: ', range.to)
+
+
     return (
         <DayPicker
             id="test"
             mode="range"
-            defaultMonth={pastMonth}
+            defaultMonth={thisMonth}
             selected={range}
             footer={footer}
             onSelect={setRange}
