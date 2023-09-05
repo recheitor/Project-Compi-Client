@@ -2,6 +2,8 @@ import { Row, Col, Form, Button } from 'react-bootstrap'
 import houseService from '../../services/house.services'
 import roomService from '../../services/room.services'
 import { Link, useNavigate } from 'react-router-dom'
+import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+
 
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -34,7 +36,10 @@ const HouseRoomsDetails = () => {
         country: '',
         amenities: [],
         included: '',
-        owner: ''
+        owner: '',
+        location: {
+            coordinates: { lat: 40.3930, lng: -3.70357777 }
+        }
     })
 
     useEffect(() => {
@@ -51,10 +56,21 @@ const HouseRoomsDetails = () => {
                 houseRoomDetails.rating.forEach(({ score }) => totalScore += score)
                 totalScore = totalScore / houseRoomDetails.rating.length
                 houseRoomDetails.totalScore = totalScore
+                const updateLocation = { lat: houseRoomDetails.location.coordinates[1], lng: houseRoomDetails.location.coordinates[0] }
+                houseRoomDetails.location.coordinates = updateLocation
                 setHouseData(houseRoomDetails)
             }
             )
             .catch(err => console.log(err))
+    }
+
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        libraries: ['places']
+    })
+
+    if (!isLoaded) {
+        return 'Loading'
     }
 
     const handleFormSubmit = (room_id) => e => {
@@ -85,6 +101,18 @@ const HouseRoomsDetails = () => {
                             !houseData.totalScore ? ' Not rated' : houseData.totalScore
                         }
                     </p>
+                    <p>House amenities: </p>
+                    {
+                        houseData.amenities.map(eachAmenity => {
+                            return (
+                                <>
+                                    <p key={eachAmenity.amenity.name}>{eachAmenity.amenity.name}</p>
+                                    <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
+                                </>
+                            )
+                        })
+                    }
+
                     {
                         houseData.gallery.map(eachPhoto => {
                             return (
@@ -92,6 +120,12 @@ const HouseRoomsDetails = () => {
                             )
                         })
                     }
+
+                    <GoogleMap center={houseData.location.coordinates} zoom={15} mapContainerStyle={{ width: '100%', height: '200px' }} >
+                        <MarkerF position={houseData.location.coordinates} />
+                        <MarkerF position={{ lat: 40.3930, lng: -3.70357777 }} />
+                    </GoogleMap>
+
                     {
                         houseData.rooms ?
                             houseData.rooms.map(eachRoom => {

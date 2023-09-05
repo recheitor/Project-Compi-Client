@@ -2,6 +2,8 @@ import { Row, Col, Form } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+
 
 let filterBy = {}
 
@@ -56,6 +58,8 @@ const HouseRoomsDetails = () => {
                     eachHouse.rating.forEach(({ score }) => totalScore += score)
                     totalScore = totalScore / eachHouse.rating.length
                     eachHouse.totalScore = totalScore
+                    let updateLocation = { lat: eachHouse.location.coordinates[1], lng: eachHouse.location.coordinates[0] }
+                    eachHouse.location.coordinates = updateLocation
                 })
                 setHouseData(RoomDetails)
             }
@@ -63,6 +67,15 @@ const HouseRoomsDetails = () => {
             .catch(err => console.log(err))
     }
 
+    const coordinates = { lat: 40.3930, lng: -3.70357777 }
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+
+    })
+
+    if (!isLoaded) {
+        return 'Loading'
+    }
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
 
@@ -108,7 +121,21 @@ const HouseRoomsDetails = () => {
                         <Form.Label>Max Price</Form.Label>
                         <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
                     </Form.Group>
+                    {
+                        houseData[0].location ?
+                            <GoogleMap center={coordinates} zoom={5} mapContainerStyle={{ width: '100%', height: '300px' }} >
+                                {
+                                    houseData.map(({ location }) => {
+                                        return (
+                                            < MarkerF position={location.coordinates} />
 
+                                        )
+                                    })
+                                }
+                            </GoogleMap>
+                            :
+                            ''
+                    }
                     {
                         houseData ?
 

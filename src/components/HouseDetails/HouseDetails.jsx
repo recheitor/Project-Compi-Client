@@ -3,6 +3,8 @@ import houseService from '../../services/house.services'
 import { Link, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+
 
 
 const HouseDetails = () => {
@@ -32,12 +34,18 @@ const HouseDetails = () => {
         country: '',
         amenities: [],
         included: '',
-        owner: ''
+        owner: '',
+        location: {
+            coordinates: { lat: 40.3930, lng: -3.70357777 }
+        }
+
     })
 
     useEffect(() => {
         getHouseForm()
     }, [])
+
+
 
     const getHouseForm = () => {
 
@@ -48,10 +56,21 @@ const HouseDetails = () => {
                 houseDetails.rating.forEach(({ score }) => totalScore += score)
                 totalScore = totalScore / houseDetails.rating.length
                 houseDetails.totalScore = totalScore
+                const updateLocation = { lat: houseDetails.location.coordinates[1], lng: houseDetails.location.coordinates[0] }
+                houseDetails.location.coordinates = updateLocation
                 setHouseData(houseDetails)
             }
             )
             .catch(err => console.log(err))
+    }
+
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+        libraries: ['places']
+    })
+
+    if (!isLoaded) {
+        return 'Loading'
     }
 
     const handleDeleteFormSubmit = e => {
@@ -84,6 +103,8 @@ const HouseDetails = () => {
             .catch(err => console.log(err))
     }
 
+
+
     return (
         <>
             <Row>
@@ -102,6 +123,22 @@ const HouseDetails = () => {
                             !houseData.totalScore ? ' Not rated' : houseData.totalScore
                         }
                     </p>
+                    <p>House amenities: </p>
+
+                    {
+                        houseData.amenities.map(eachAmenity => {
+                            return (
+                                <>
+                                    <p key={eachAmenity.amenity.name}>{eachAmenity.amenity.name}</p>
+                                    <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
+                                </>
+                            )
+                        })
+                    }
+
+
+
+
                     {
                         houseData.gallery.map(eachPhoto => {
                             return (
@@ -109,6 +146,14 @@ const HouseDetails = () => {
                             )
                         })
                     }
+
+
+                    <GoogleMap center={houseData.location.coordinates} zoom={15} mapContainerStyle={{ width: '100%', height: '200px' }} >
+                        <MarkerF position={houseData.location.coordinates} />
+                        <MarkerF position={{ lat: 40.3930, lng: -3.70357777 }} />
+                    </GoogleMap>
+
+
                     <Form onSubmit={handleDeleteFormSubmit} >
                         <Button variant="dark" type="submit" >Delete</Button>
                     </Form>
@@ -121,6 +166,7 @@ const HouseDetails = () => {
                     </Form>
 
                     <Link className='btn btn-dark' to={`/house-edit/${houseData._id}`}>Edit</Link>
+
 
                 </Col>
             </Row >

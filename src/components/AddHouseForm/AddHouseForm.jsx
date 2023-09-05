@@ -4,11 +4,11 @@ import houseServices from '../../services/house.services'
 import { useNavigate } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
 import amenityService from '../../services/amenity.services'
+import AutocompleteForm from "../AutocompleteForm/AutocompleteForm"
 
 const AddHouseForm = () => {
 
     const navigate = useNavigate()
-    // const [amenities, setAmenities] = useState([])
     const [loadingGallery, setLoadingGallery] = useState(false)
 
     const [houseData, setHouseData] = useState({
@@ -27,6 +27,7 @@ const AddHouseForm = () => {
         city: '',
         country: '',
         amenities: [],
+        coordinates: ''
     })
 
     useEffect(() => {
@@ -98,6 +99,11 @@ const AddHouseForm = () => {
             })
     }
 
+
+    const getPlaceCoordinates = ({ lat, lng }) => {
+        setHouseData({ ...houseData, coordinates: [lng, lat] })
+    }
+
     return (
         <div className="AddHomeForm">
             <Form onSubmit={handleFormSubmit}>
@@ -115,6 +121,7 @@ const AddHouseForm = () => {
                     <Form.Label>Description</Form.Label>
                     <Form.Control type="text" value={houseData.description} name="description" onChange={handleInputChange} />
                 </Form.Group>
+
 
                 <Form.Group className="mb-3" controlId="maxGuests">
                     <Form.Label>Max Guests</Form.Label>
@@ -145,6 +152,8 @@ const AddHouseForm = () => {
                     <Form.Label>Cleaning Price</Form.Label>
                     <Form.Control type="number" value={houseData.cleaningPrice} name="cleaningPrice" onChange={handleInputChange} />
                 </Form.Group>
+
+                <AutocompleteForm getPlaceCoordinates={getPlaceCoordinates} />
 
                 <Form.Group className="mb-3" controlId="street">
                     <Form.Label>Street</Form.Label>
@@ -186,6 +195,7 @@ const AddHouseForm = () => {
                                         name={`${elem.name}`}
                                         onChange={handleCheckChange}
                                     />
+                                    <img style={{ height: '20px' }} src={elem.icon} alt="icon" />
                                 </div>
                             )
 
