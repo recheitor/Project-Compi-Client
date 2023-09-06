@@ -1,20 +1,28 @@
 import { Row, Col, Form, Button } from 'react-bootstrap'
-import houseService from '../../services/house.services'
-import roomService from '../../services/room.services'
+import houseServices from '../../services/house.services'
+import roomServices from '../../services/room.services'
+import bookingServices from '../../services/booking.services'
+
+
 import { Link, useNavigate } from 'react-router-dom'
-import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+import { useJsApiLoader, GoogleMap, MarkerF, InfoBox } from "@react-google-maps/api";
 
 
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts';
+import Map from '../../components/Map/Map'
+
 
 
 const HouseRoomsDetails = () => {
 
     const navigate = useNavigate()
     const { rooms_house_id } = useParams()
-
+    const markerClick = () => {
+        alert('Hi')
+    }
+    let label = ''
     const [houseData, setHouseData] = useState({
         title: '',
         gallery: [],
@@ -47,9 +55,11 @@ const HouseRoomsDetails = () => {
         getHouseRoomForm()
     }, [])
 
+
+
     const getHouseRoomForm = () => {
 
-        houseService
+        houseServices
             .getOneHouseRoom(rooms_house_id)
             .then(({ data: houseRoomDetails }) => {
 
@@ -60,31 +70,44 @@ const HouseRoomsDetails = () => {
                 const updateLocation = { lat: houseRoomDetails.location.coordinates[1], lng: houseRoomDetails.location.coordinates[0] }
                 houseRoomDetails.location.coordinates = updateLocation
                 setHouseData(houseRoomDetails)
-            }
-            )
+            })
+
+        bookingServices
+            .getAllRoomBookings(rooms_house_id)
+            .then(({ data }) => {
+                console.log('DATA', data)
+                setAllBookingsData(data)
+                console.log('ALLBOOKINGSDATA', allBookingsData)
+            })
+            .catch(err => console.log(err))
+
+
+
             .catch(err => console.log(err))
     }
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-
+        Libraries: ['drawing']
     })
 
     if (!isLoaded) {
         return 'Loading'
     }
-
     const handleFormSubmit = (room_id) => e => {
 
         e.preventDefault()
 
-        roomService
+        roomServices
             .deleteRoom(room_id, { house_id: rooms_house_id })
             .then(() => navigate('/'))
             .catch(err => console.log(err))
     }
 
+
+
     return (
+
         <>
             <Row>
                 <Col>
@@ -122,11 +145,24 @@ const HouseRoomsDetails = () => {
                         })
                     }
 
-                    <GoogleMap center={houseData.location.coordinates} zoom={15} mapContainerStyle={{ width: '100%', height: '200px' }} >
-                        <MarkerF position={houseData.location.coordinates} />
-                        <MarkerF position={{ lat: 40.3930, lng: -3.70357777 }} />
-                    </GoogleMap>
+                    {
+                        !houseData.price.housePrice
+                            ? <p>cargando</p>
+                            :
+                            // <GoogleMap center={houseData.location.coordinates} zoom={15} mapContainerStyle={{ width: '100%', height: '200px' }} >
 
+
+
+
+                            //     <MarkerF animation={google.maps.Animation.DROP} position={houseData.location.coordinates} onClick={markerClick} label={houseData.price.housePrice.toString()} icon='https://res.cloudinary.com/dbtmrinwa/image/upload/v1693865669/aeasrxf2ecvgvxcpxv6r.jpg' >
+
+                            //     </MarkerF>
+                            //     : ''
+
+
+                            // </GoogleMap>
+                            <Map />
+                    }
                     {
                         houseData.rooms ?
                             houseData.rooms.map(eachRoom => {
@@ -146,9 +182,28 @@ const HouseRoomsDetails = () => {
                                                 )
                                             })
                                         }
+
+                                        {
+
+                                            eachRoom.bookings.map(eachBooking => {
+                                                const fechaEntradaStr = eachBooking.bookingDates.entry
+                                                const fechaSalidaStr = eachBooking.bookingDates.exit
+
+                                                const fechaEntrada = new Date(fechaEntradaStr);
+                                                const fechaSalida = new Date(fechaSalidaStr);
+
+                                                const fechaActual = new Date();
+
+                                                return (
+                                                    (fechaActual >= fechaEntrada && fechaActual <= fechaSalida) &&
+                                                    <p>Living: {eachBooking.user.firstName} until: {eachBooking.bookingDates.exit}</p>
+                                                )
+
+                                            })
+                                        }
                                         <br />
                                         <br />
-                                        <Link className='btn btn-dark' to={`/booking/${eachRoom._id}`}>Booking</Link>
+                                        <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
                                         <br />
                                         <br />
                                         <Form onSubmit={handleFormSubmit(eachRoom._id)} >
