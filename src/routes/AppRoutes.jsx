@@ -6,7 +6,6 @@ import AddAmenityPage from '../pages/AddAmenityPage/AddAmenityPage'
 import AddHousePage from '../pages/AddHousePage/AddHousePage'
 import AddRoomPage from '../pages/AddRoomPage/AddRoomPage'
 import ShowHouseRoomsPage from '../pages/ShowHouseRoomsPage/ShowHouseRoomsPage'
-import ShowHousesPage from '../pages/ShowHousesPage/ShowHousesPage'
 import ShowHouseRoomsPageDetails from '../pages/ShowHouseRoomsPageDetails/ShowHouseRoomsPageDetails'
 import EditHousePage from '../pages/EditHousePage/EditHousePage'
 import EditRoomPage from '../pages/EditRoomPage/EditRoomPage'
@@ -15,7 +14,6 @@ import PrivateRoutes from './PrivateRoutes'
 import EditProfilePage from '../pages/EditProfilePage/EditProfilePage'
 import UsersListPage from '../pages/UsersListPage/UsersListPage'
 import UserDetailsPage from '../pages/UserDetailsPage/UserDetailsPage'
-import ShowHousePageDetails from '../pages/ShowHousePageDetails/ShowHousePageDetails'
 import BookingPage from '../pages/BookingPage/BookingPage'
 
 // import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
@@ -35,8 +33,6 @@ const AppRoutes = () => {
                 <Route path={'/user/:id'} element={<UserDetailsPage />} />
                 <Route path={'/add-amenity'} element={<AddAmenityPage />} />
 
-                <Route path={'/houses'} element={<ShowHousesPage />} />
-                <Route path={'/houses/:house_id'} element={<ShowHousePageDetails />} />
                 <Route path={'/house-create'} element={<AddHousePage />} />
                 <Route path={'/house-edit/:id'} element={<EditHousePage />} />
 

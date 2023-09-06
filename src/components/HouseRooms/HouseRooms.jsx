@@ -1,4 +1,4 @@
-import { Row, Form, Button, Modal } from 'react-bootstrap'
+import { Container, Row, Form, Button, Modal } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import HouseCard from '../HouseCard/HouseCard';
