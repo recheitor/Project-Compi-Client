@@ -3,7 +3,6 @@ import { Form, Button } from "react-bootstrap"
 import bookingServices from '../../services/booking.services'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import Calendar from '../DayPicker/DayPicker'
 
 const BookingForm = () => {
 
@@ -11,7 +10,7 @@ const BookingForm = () => {
     const { rooms_house_id: room_id } = useParams()
 
     const [allBookingsData, setAllBookingsData] = useState([])
-    const [bookingConflict, setBookingConflict] = useState()
+    const [bookingConflict, setBookingConflict] = useState(true)
 
     const [bookingData, setBookingData] = useState({
         room: room_id,
@@ -28,27 +27,34 @@ const BookingForm = () => {
         bookingServices
             .getAllRoomBookings(room_id)
             .then(({ data }) => {
-                console.log('DATA', data)
                 setAllBookingsData(data)
-                console.log('ALLBOOKINGSDATA', allBookingsData)
             })
             .catch(err => console.log(err))
     }
 
     const handleInputChange = e => {
         const { value, name } = e.currentTarget
-        setBookingData({ ...bookingData, [name]: value })
-    }
-    let conflicto = false
-    const conflict = () => {
-        allBookingsData.forEach(eachBooking => {
 
-            if ((bookingData.entry >= eachBooking.bookingDates.entry && bookingData.entry <= eachBooking.bookingDates.exit) ||
-                (bookingData.exit >= eachBooking.bookingDates.entry && bookingData.exit <= eachBooking.bookingDates.exit)) {
-                console.log("no puedes reservar")
-                conflicto = true
-                console.log(conflicto)
-            }
+        setBookingConflict(false)
+
+        setBookingData(prevBookingData => {
+            const updatedBookingData = { ...prevBookingData, [name]: value }
+
+            allBookingsData.forEach(eachBooking => {
+
+                eachBooking.bookingDates.entry = eachBooking.bookingDates.entry.split('T')[0]
+                eachBooking.bookingDates.exit = eachBooking.bookingDates.exit.split('T')[0]
+
+                if ((updatedBookingData.entry >= eachBooking.bookingDates.entry && updatedBookingData.entry <= eachBooking.bookingDates.exit) ||
+                    (updatedBookingData.exit >= eachBooking.bookingDates.entry && updatedBookingData.exit <= eachBooking.bookingDates.exit) ||
+                    (!updatedBookingData.entry || !updatedBookingData.exit) ||
+                    (updatedBookingData.entry > updatedBookingData.exit)) {
+
+                    setBookingConflict(true)
+                }
+            })
+
+            return updatedBookingData
         })
     }
 
@@ -56,26 +62,20 @@ const BookingForm = () => {
 
         e.preventDefault()
 
-        conflict()
+        if (!bookingConflict) {
 
-        setTimeout(() => {
-            if (!conflicto) {
-                bookingServices
-                    .createBooking(bookingData)
-                    .then(() => {
-                        console.log('SI')
-                        // navigate('/')
-                    })
-                    .catch(err => console.log(err))
-            }
-        }, 2000);
-
+            bookingServices
+                .createBooking(bookingData)
+                .then(() => {
+                    console.log('SI RESERVAS')
+                    navigate('/rooms')
+                })
+                .catch(err => console.log(err))
+        }
     }
 
     return (
         <div className="BookingForm">
-
-            <Calendar />
 
             <Form onSubmit={handleFormSubmit}>
                 <Form.Group className="mb-3" controlId="entry">
@@ -99,7 +99,7 @@ const BookingForm = () => {
                 </Form.Group>
 
                 <div className="d-grid">
-                    <Button variant="dark" type="submit">{bookingConflict ? "no reservas" : "reserva"}</Button>
+                    <Button variant="dark" type="submit" disabled={bookingConflict}>{bookingConflict ? "Try other days" : "Book"}</Button>
                 </div>
             </Form>
         </div>

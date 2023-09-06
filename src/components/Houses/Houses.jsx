@@ -129,9 +129,9 @@ const Houses = () => {
                         houseData[0].location ?
                             <GoogleMap center={coordinates} zoom={5} mapContainerStyle={{ width: '100%', height: '300px' }} >
                                 {
-                                    houseData.map(({ location }) => {
+                                    houseData.map(({ location }, idx) => {
                                         return (
-                                            < MarkerF position={location.coordinates} />
+                                            < MarkerF key={idx} position={location.coordinates} />
                                         )
                                     })
                                 }
@@ -143,10 +143,10 @@ const Houses = () => {
                     {
                         houseData ?
 
-                            houseData.map(eachHouseData => {
+                            houseData.map((eachHouseData, idx) => {
                                 return (
 
-                                    <div key={eachHouseData.title}>
+                                    <div key={idx}>
                                         <h2>House Title:{eachHouseData.title}</h2>
                                         <p>House Description:{eachHouseData.description}</p>
                                         <p>House Max guests: {eachHouseData.info.maxGuests}</p>

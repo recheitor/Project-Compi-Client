@@ -31,6 +31,10 @@ class BookingService {
         return this.api.get(`/get-all-room-bookings/${room_id}`)
     }
 
+    getAllMyBookings(user_id) {
+        return this.api.get(`/get-all-my-bookings/${user_id}`)
+    }
+
     getOneBooking(booking_id) {
         return this.api.get(`/${booking_id}`)
     }
