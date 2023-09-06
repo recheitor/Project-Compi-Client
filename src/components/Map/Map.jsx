@@ -48,7 +48,7 @@ function Map({ houseData }) {
             zoom={10}
             center={centerMap}
             onClick={() => setActiveMarker(-1)}
-            mapContainerStyle={{ width: "50vw", height: "50vh" }}
+            mapContainerStyle={{ width: "100vw", height: "80vh" }}
             options={{ styles: customMapStyle }}
         >
 
