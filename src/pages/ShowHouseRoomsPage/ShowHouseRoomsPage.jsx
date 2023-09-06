@@ -5,14 +5,9 @@ const ShowHouseRoomsPage = () => {
 
     return (
         <Container className="ShowHouseRoomsPage">
-            <Row>
-                <Col md={{ span: 8, offset: 2 }}>
-                    <h1>House - Renting Rooms details</h1>
-                    <h3>Eliminar todos los datos no necesarios</h3>
-                    <hr />
-                    <HouseRooms />
-                </Col>
-            </Row>
+            <h1>House - Renting Rooms details</h1>
+            <hr />
+            <HouseRooms />
         </Container>
     )
 }

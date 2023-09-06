@@ -1,13 +1,15 @@
-import { Row, Col, Form } from 'react-bootstrap'
+import { Row, Form, Button, Modal } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+import HouseCard from '../HouseCard/HouseCard';
+import Map from '../../components/Map/Map'
 
 
 let filterBy = {}
 
-const HouseRoomsDetails = () => {
+const HouseRooms = () => {
+
+    const [show, setShow] = useState(false)
 
     const [houseData, setHouseData] = useState([{
         title: '',
@@ -67,15 +69,6 @@ const HouseRoomsDetails = () => {
             .catch(err => console.log(err))
     }
 
-    const coordinates = { lat: 40.3930, lng: -3.70357777 }
-    const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-
-    })
-
-    if (!isLoaded) {
-        return 'Loading'
-    }
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
 
@@ -93,10 +86,45 @@ const HouseRoomsDetails = () => {
         setFilterData({ ...filterData, ...filterBy })
     }
 
+    const handleClose = () => setShow(false)
+    const handleShow = () => setShow(true)
+
     return (
         <>
-            <Row>
-                <Col>
+            {/* <Form.Group className="mb-3" controlId="beds">
+                        <Form.Label>Min Beds</Form.Label>
+                        <Form.Control type="number" value={filterData.beds} onChange={handleInputChange} name="beds" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="bathrooms">
+                        <Form.Label>Min Bathrooms</Form.Label>
+                        <Form.Control type="number" value={filterData.bathrooms} onChange={handleInputChange} name="bathrooms" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="maxGuests">
+                        <Form.Label>Max Guests</Form.Label>
+                        <Form.Control type="number" value={filterData.maxGuests} onChange={handleInputChange} name="maxGuests" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="rooms">
+                        <Form.Label>Min Rooms</Form.Label>
+                        <Form.Control type="number" value={filterData.rooms} onChange={handleInputChange} name="rooms" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="price">
+                        <Form.Label>Max Price</Form.Label>
+                        <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
+                    </Form.Group> */}
+
+            <Button variant="dark" onClick={handleShow}>
+                Filter
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Filter rooms</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <Form.Group className="mb-3" controlId="beds">
                         <Form.Label>Min Beds</Form.Label>
                         <Form.Control type="number" value={filterData.beds} onChange={handleInputChange} name="beds" />
@@ -121,28 +149,28 @@ const HouseRoomsDetails = () => {
                         <Form.Label>Max Price</Form.Label>
                         <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
                     </Form.Group>
-                    {
-                        houseData[0].location ?
-                            <GoogleMap center={coordinates} zoom={5} mapContainerStyle={{ width: '100%', height: '300px' }} >
-                                {
-                                    houseData.map(({ location }) => {
-                                        return (
-                                            < MarkerF position={location.coordinates} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="dark" onClick={handleClose}>
+                        Filter
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            {
+                houseData[0].location ?
+                    < Map houseData={houseData} />
+                    :
+                    ''
+            }
+            <Row>
+                {
+                    houseData[0].price.housePrice ?
 
-                                        )
-                                    })
-                                }
-                            </GoogleMap>
-                            :
-                            ''
-                    }
-                    {
-                        houseData ?
-
-                            houseData.map(eachHouseData => {
-                                return (
-                                    <div key={eachHouseData.title}>
-                                        <h2>House Title:{eachHouseData.title}</h2>
+                        houseData.map(eachHouseData => {
+                            return (
+                                < >
+                                    <HouseCard key={eachHouseData.title} data={eachHouseData} />
+                                    {/* <h2>House Title:{eachHouseData.title}</h2>
                                         <p>House Description:{eachHouseData.description}</p>
                                         <p>House Max guests: {eachHouseData.info.maxGuests}</p>
                                         <p>House rooms: {eachHouseData.info.rooms}</p>
@@ -190,17 +218,16 @@ const HouseRoomsDetails = () => {
                                                 :
                                                 ''
                                         }
-                                        <hr />
-                                    </div>
-                                )
-                            })
-                            :
-                            ''
-                    }
-                </Col>
-            </Row>
+                                        <hr /> */}
+                                </>
+                            )
+                        })
+                        :
+                        ''
+                }
+            </Row >
         </>
     )
 }
 
-export default HouseRoomsDetails
+export default HouseRooms
