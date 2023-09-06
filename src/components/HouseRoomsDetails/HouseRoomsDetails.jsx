@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts';
 import Map from '../../components/Map/Map'
-
+import updateHouseRoomsDetails from "../../utils/updateDetails.utils";
 
 
 const HouseRoomsDetails = () => {
@@ -62,27 +62,14 @@ const HouseRoomsDetails = () => {
         houseServices
             .getOneHouseRoom(rooms_house_id)
             .then(({ data: houseRoomDetails }) => {
-
-                let totalScore = 0
-                houseRoomDetails.rating.forEach(({ score }) => totalScore += score)
-                totalScore = totalScore / houseRoomDetails.rating.length
-                houseRoomDetails.totalScore = totalScore
-                const updateLocation = { lat: houseRoomDetails.location.coordinates[1], lng: houseRoomDetails.location.coordinates[0] }
-                houseRoomDetails.location.coordinates = updateLocation
-                setHouseData(houseRoomDetails)
+                setHouseData(updateHouseRoomsDetails(houseRoomDetails))
             })
 
         bookingServices
             .getAllRoomBookings(rooms_house_id)
             .then(({ data }) => {
-                console.log('DATA', data)
                 setAllBookingsData(data)
-                console.log('ALLBOOKINGSDATA', allBookingsData)
             })
-            .catch(err => console.log(err))
-
-
-
             .catch(err => console.log(err))
     }
 
@@ -148,7 +135,7 @@ const HouseRoomsDetails = () => {
                         !houseData.price.housePrice
                             ? <p>cargando</p>
                             :
-                            <Map houseData={[houseData]} />
+                            <Map houseData={[houseData]} zoom={15} />
                     }
                     {
                         houseData.rooms ?

@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { GoogleMap, InfoBox, Marker, useJsApiLoader } from "@react-google-maps/api";
 import customMapStyle from './mapStyle'
-import './Map.css'
 
 const center = { lat: 40.3930, lng: -3.70357777 }
 
-function Map({ houseData }) {
+
+
+
+function Map({ houseData, zoom }) {
 
     const [centerMap, setCenterMap] = useState(center);
     const [activeMarker, setActiveMarker] = useState(-1);
     const [infoDomReady, setInfoDomReady] = useState(false);
+
+    if (houseData.length <= 1 && centerMap !== houseData[0].location.coordinates) {
+        setCenterMap(houseData[0].location.coordinates)
+    }
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -39,7 +45,7 @@ function Map({ houseData }) {
 
     return (
         <GoogleMap
-            zoom={10}
+            zoom={zoom}
             center={centerMap}
             onClick={() => setActiveMarker(-1)}
             mapContainerStyle={{ width: "100vw", height: "80vh" }}

@@ -1,9 +1,10 @@
-import { Row, Form, Button, Modal, Container } from 'react-bootstrap'
+import { Row, Form, Button, Modal } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import HouseCard from '../HouseCard/HouseCard';
 import Map from '../../components/Map/Map'
 import updateHouseRooms from '../../utils/updateHouseDetails';
+
 
 let filterBy = {}
 
@@ -26,6 +27,7 @@ const HouseRooms = () => {
             housePrice: '',
             cleaningPrice: ''
         },
+
         street: '',
         number: '',
         zipcode: '',
@@ -51,6 +53,7 @@ const HouseRooms = () => {
     const getHouseRoomFormQuery = (filterBy) => {
         filterBy = filterBy ? filterBy : []
         houseServices
+
             .getHousesbyType('shared', filterBy)
             .then(({ data: RoomDetails }) => setHouseData(updateHouseRooms(RoomDetails)))
             .catch(err => console.log(err))
@@ -58,12 +61,17 @@ const HouseRooms = () => {
 
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
+
         filterBy = { ...filterBy, [name]: value }
+
         let filterQuery = ''
         for (const property in filterBy) {
             filterQuery += `&${property}=${filterBy[property]}`
+
+
         }
         filterQuery = filterQuery.slice(1)
+
         getHouseRoomFormQuery(filterQuery)
         setFilterData({ ...filterData, ...filterBy })
     }
@@ -91,11 +99,9 @@ const HouseRooms = () => {
             </Container>
 
             <Modal show={show} onHide={handleClose}>
-
                 <Modal.Header closeButton>
                     <Modal.Title>Filter rooms</Modal.Title>
                 </Modal.Header>
-
                 <Modal.Body>
                     <Form.Group className="mb-3" controlId="beds">
                         <Form.Label>Min Beds</Form.Label>
@@ -122,14 +128,12 @@ const HouseRooms = () => {
                         <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
                     </Form.Group>
                 </Modal.Body>
-
                 <Modal.Footer>
                     <Button variant="dark" onClick={handleClose}>
                         Filter
                     </Button>
                 </Modal.Footer>
             </Modal>
-
             {
                 showMap && houseData[0].location ?
                     < Map houseData={houseData} zoom={5} />
