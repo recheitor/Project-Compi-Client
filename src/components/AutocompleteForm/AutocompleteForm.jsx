@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "react-bootstrap";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import Geocode from "react-geocode"
 import getGeocode from "../../utils/geocode.utils";
@@ -13,6 +12,7 @@ function AutocompleteForm({ getPlaceCoordinates }) {
 
     const handleAutoComplete = () => {
         if (place) {
+            console.log(place)
             getGeocode(place.label, getPlaceCoordinates)
         }
     }

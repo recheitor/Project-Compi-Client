@@ -11,7 +11,7 @@ import { useJsApiLoader } from "@react-google-maps/api";
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts';
-import Map from '../../components/Map/Map'
+import MapDetails from '../../components/MapDetails/MapDetails'
 import updateHouseRoomsDetails from "../../utils/updateDetails.utils";
 
 
@@ -135,7 +135,7 @@ const HouseRoomsDetails = () => {
                         !houseData.price.housePrice
                             ? <p>cargando</p>
                             :
-                            <Map houseData={[houseData]} zoom={15} />
+                            <MapDetails houseData={[houseData]} zoom={15} />
                     }
                     {
                         houseData.rooms ?
