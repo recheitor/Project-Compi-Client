@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { GoogleMap, InfoBox, Marker, useJsApiLoader } from "@react-google-maps/api";
-import customMapStyle from './mapStyle'
+import customMapStyle from '../../utils/mapStyle'
+import { HOUSE_INITIAL_COORDS } from "../../consts/house.consts";
+import { Link, useNavigate } from "react-router-dom"
+import GalleryCarousel from "../GalleryCarousel/GalleryCarousel";
 
-const center = { lat: 40.3930, lng: -3.70357777 }
-
-
+const center = HOUSE_INITIAL_COORDS
 
 
 function Map({ houseData, zoom }) {
 
+    const navigate = useNavigate()
     const [centerMap, setCenterMap] = useState(center);
     const [activeMarker, setActiveMarker] = useState(-1);
     const [infoDomReady, setInfoDomReady] = useState(false);
-
-    if (houseData.length <= 1 && centerMap !== houseData[0].location.coordinates) {
-        setCenterMap(houseData[0].location.coordinates)
-    }
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -35,29 +33,30 @@ function Map({ houseData, zoom }) {
             return;
         }
         setActiveMarker(idx);
-        setCenterMap(marker)
+        // setCenterMap(marker)
     };
 
-    const handleInfoCloseClick = () => {
-        setActiveMarker(-1);
-        setInfoDomReady(false);
-    };
+
+
+    const handleInfoBoxClick = (house_id) => {
+        navigate(`/rooms/${house_id}`)
+    }
 
     return (
         <GoogleMap
             zoom={zoom}
             center={centerMap}
-            onClick={() => setActiveMarker(-1)}
+            // onClick={() => setActiveMarker(-1)}
             mapContainerStyle={{ width: "100vw", height: "80vh" }}
             options={{ styles: customMapStyle }}
         >
             {
-                houseData.map(({ location, price }, idx) => {
+                houseData.map(({ location, price, _id, gallery }, idx) => {
                     return (
                         < Marker
                             key={idx}
                             position={location.coordinates}
-                            onClick={() => handleActiveMarker(location.coordinates, idx)}
+                            onMouseOver={() => handleActiveMarker(location.coordinates, idx)}
                             label={`${price.housePrice.toString()}€`}
                             icon={{
                                 url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1693989316/rjuqeritzuuomp0cnuyj.png',
@@ -69,11 +68,16 @@ function Map({ houseData, zoom }) {
                                     (
                                         <InfoBox
                                             options={infoBoxOpts}
-                                            onCloseClick={handleInfoCloseClick}
+                                        // onClick={() => handleInfoBoxClick(_id)}
+
+
                                         >
-                                            <div style={{ width: '100px', height: '100px' }}>
-                                                <img onClick={() => alert('hi')} src="https://res.cloudinary.com/dbtmrinwa/image/upload/v1693865957/rt7uihukf3qkujwcx8yw.avif" style={{ width: '100px', height: '100px', borderRadius: '10px' }} alt="" />
-                                            </div>
+                                            <Link as={'div'} to={`/rooms/${_id}`}>
+                                                <div style={{ width: '130px', height: '100px' }}>
+                                                    <GalleryCarousel gallery={gallery} size={'100px'} />
+
+                                                </div>
+                                            </Link>
                                         </InfoBox>
                                     )
                                     :
