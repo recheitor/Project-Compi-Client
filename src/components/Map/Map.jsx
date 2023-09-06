@@ -3,25 +3,20 @@ import { GoogleMap, InfoBox, Marker, useJsApiLoader } from "@react-google-maps/a
 import customMapStyle from './mapStyle'
 import './Map.css'
 
-
 const center = { lat: 40.3930, lng: -3.70357777 }
 
 function Map({ houseData }) {
 
     const [centerMap, setCenterMap] = useState(center);
-
     const [activeMarker, setActiveMarker] = useState(-1);
     const [infoDomReady, setInfoDomReady] = useState(false);
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-
     })
-
     if (!isLoaded) {
         return 'Loading'
     }
-
 
     const infoBoxOpts = {
         closeBoxURL: "",
@@ -42,7 +37,6 @@ function Map({ houseData }) {
         setInfoDomReady(false);
     };
 
-
     return (
         <GoogleMap
             zoom={10}
@@ -51,7 +45,6 @@ function Map({ houseData }) {
             mapContainerStyle={{ width: "100vw", height: "80vh" }}
             options={{ styles: customMapStyle }}
         >
-
             {
                 houseData.map(({ location, price }, idx) => {
                     return (
@@ -83,90 +76,8 @@ function Map({ houseData }) {
                         </Marker>
                     )
                 })
-
             }
-            {/* <Marker
-                position={coords[0]}
-                onClick={() => handleActiveMarker(0)}
-                label={{
-                    text: price,
-                    className: 'marker-label'
-                }}
-                icon={{
-                    url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1693989316/rjuqeritzuuomp0cnuyj.png',
-                    scaledSize: new window.google.maps.Size(50, 25)
-                }}
-            >
-                {
-                    activeMarker === 0 ?
-                        (
-                            <InfoBox
-                                options={infoBoxOpts}
-
-                                onCloseClick={handleInfoCloseClick}
-
-                            >
-
-                                <div style={{ width: '100px', height: '100px' }}>
-                                    <img onClick={() => alert('hi')} src="https://res.cloudinary.com/dbtmrinwa/image/upload/v1693865957/rt7uihukf3qkujwcx8yw.avif" style={{ width: '100px', height: '100px', borderRadius: '10px' }} alt="" />
-                                </div>
-
-                            </InfoBox>
-                        )
-                        :
-                        null
-                }
-            </Marker> */}
-
-            {/* <Marker
-                position={coords[1]}
-                onClick={() => handleActiveMarker(1)}
-                label={{
-                    text: price,
-                    className: 'marker-label'
-                }}
-                icon={{
-                    url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1693989316/rjuqeritzuuomp0cnuyj.png',
-                    scaledSize: new window.google.maps.Size(50, 25)
-                }}
-            >
-                {
-                    activeMarker === 1 ?
-                        (
-                            <InfoBox
-                                options={infoBoxOpts}
-                                // onClick={() => alert('hi')}
-                                onCloseClick={handleInfoCloseClick}
-
-                            >
-
-                                <div style={{ width: '100px', height: '100px' }}>
-                                    <img onClick={() => alert('hi')} src="https://res.cloudinary.com/dbtmrinwa/image/upload/v1693865957/rt7uihukf3qkujwcx8yw.avif" style={{ width: '100px', height: '100px', borderRadius: '10px' }} alt="" />
-                                </div>
-
-                            </InfoBox>
-                        )
-                        :
-                        null
-                }
-            </Marker> */}
-
-            {/* <MarkerF position={coords[1]} onClick={() => handleActiveMarker(1)}>
-                {activeMarker === 1 ? (
-                    <InfoWindow
-                        onDomReady={() => setInfoDomReady(true)}
-                        onUnmount={() => setInfoDomReady(false)}
-                        onCloseClick={handleInfoCloseClick}
-                    >
-                    </InfoWindow>
-                ) : null}
-            </Marker> */}
         </GoogleMap >
-
-
-
-
     );
 }
-
 export default Map;
