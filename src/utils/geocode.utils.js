@@ -1,15 +1,15 @@
 import Geocode from "react-geocode"
 
-Geocode.setApiKey('AIzaSyCIkt_MWj32EbnKrxghvdDSFRzxDfC4uMs')
+Geocode.setApiKey(import.meta.env.VITE_GOOGLE_MAPS_API_KEY)
 
-const geocode = ({ label }) => {
+const getGeocode = (label, getPlaceCoordinates) => {
     Geocode
         .fromAddress(label)
         .then(response => {
-            return response.results[0].geometry.location
+            getPlaceCoordinates(response.results[0].geometry.location)
 
         })
         .catch(err => console.log(err))
 }
 
-export default geocode
+export default getGeocode

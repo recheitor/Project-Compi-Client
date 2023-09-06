@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
 import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts'
+import Map from '../../components/Map/Map'
+
 
 
 
@@ -63,14 +65,7 @@ const HouseDetails = () => {
             .catch(err => console.log(err))
     }
 
-    const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
 
-    })
-
-    if (!isLoaded) {
-        return 'Loading'
-    }
 
     const handleDeleteFormSubmit = e => {
 
@@ -135,9 +130,6 @@ const HouseDetails = () => {
                         })
                     }
 
-
-
-
                     {
                         houseData.gallery.map(eachPhoto => {
                             return (
@@ -145,12 +137,12 @@ const HouseDetails = () => {
                             )
                         })
                     }
-
-
-                    <GoogleMap center={houseData.location.coordinates} zoom={15} mapContainerStyle={{ width: '100%', height: '200px' }} >
-                        <MarkerF position={houseData.location.coordinates} />
-                        <MarkerF position={{ lat: 40.3930, lng: -3.70357777 }} />
-                    </GoogleMap>
+                    {
+                        !houseData.price.housePrice
+                            ? <p>cargando</p>
+                            :
+                            <Map houseData={[houseData]} />
+                    }
 
 
                     <Form onSubmit={handleDeleteFormSubmit} >

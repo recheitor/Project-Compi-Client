@@ -2,7 +2,8 @@ import { Row, Col, Form } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useJsApiLoader, GoogleMap, MarkerF } from "@react-google-maps/api";
+import Map from '../../components/Map/Map'
+
 
 // TODO: MEJORAR LA CREACIÓN DE URL -> https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/set
 
@@ -66,15 +67,6 @@ const Houses = () => {
             .catch(err => console.log(err))
     }
 
-    const coordinates = { lat: 40.3930, lng: -3.70357777 }
-    const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-
-    })
-
-    if (!isLoaded) {
-        return 'Loading'
-    }
 
     const handleInputChange = e => {
         const { name, value } = e.currentTarget
@@ -127,15 +119,9 @@ const Houses = () => {
 
                     {
                         houseData[0].location ?
-                            <GoogleMap center={coordinates} zoom={5} mapContainerStyle={{ width: '100%', height: '300px' }} >
-                                {
-                                    houseData.map(({ location }, idx) => {
-                                        return (
-                                            < MarkerF key={idx} position={location.coordinates} />
-                                        )
-                                    })
-                                }
-                            </GoogleMap>
+
+                            < Map houseData={houseData} />
+
                             :
                             ''
                     }
