@@ -11,21 +11,45 @@ const Navigation = () => {
         <Navbar
             bg="light"
             data-bs-theme="light"
-            className='mb-5 border-bottom'
+            className='mb-4 border-bottom'
             expand="lg"
         >
             <Container>
-                <Link className='navbar-brand'>COMPI</Link>
+                <Link to={'/'} className='navbar-brand me-auto'>COMPI</Link>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
-                        <Link to={'/'} className='nav-link'>Home</Link>
-                    </Nav>
 
-                    <div className="d-flex">
+
+
+                    <Nav className="ms-auto mx-5">
+                        {
+                            loggedUser &&
+                            <>
+                                <Nav className="me-auto">
+                                    <Link
+                                        to={'/house-create'}
+                                        className='nav-link'
+                                    >
+                                        Add your house
+                                    </Link>
+                                </Nav>
+
+                                <Nav className="me-auto">
+                                    <Link
+                                        to={'/rooms-create'}
+                                        className='nav-link'
+                                    >
+                                        Add rooms to your houses
+                                    </Link>
+                                </Nav>
+                            </>
+                        }
+                    </Nav>
+                    <Nav className="d-flex">
+
                         <NavDropdown
                             title={`Hello, ${loggedUser ? loggedUser.firstName : 'guest'}! `}
-                            className="navbar-text"
+                            className="ml-5 navbar-text"
                             id="basic-nav-dropdown"
                         >
                             {
@@ -47,23 +71,7 @@ const Navigation = () => {
                                     </NavDropdown.Item>
 
                                     <NavDropdown.Item as={'div'}>
-                                        <Link to={'#favs'} className='nav-link'>Favs</Link>
-                                    </NavDropdown.Item>
-
-                                    <NavDropdown.Item as={'div'}>
-                                        <Link to={'/rooms'} className='nav-link'>Show Rooms Houses</Link>
-                                    </NavDropdown.Item>
-
-                                    <NavDropdown.Item as={'div'}>
-                                        <Link to={'/houses'} className='nav-link'>Show Houses</Link>
-                                    </NavDropdown.Item>
-
-                                    <NavDropdown.Item as={'div'}>
-                                        <Link to={'/rooms-create'} className='nav-link'>Add rooms to your houses</Link>
-                                    </NavDropdown.Item>
-
-                                    <NavDropdown.Item as={'div'}>
-                                        <Link to={'/house-create'} className='nav-link'>Add your house</Link>
+                                        <Link to={'#favs'} className='nav-link'>Favorite rooms</Link>
                                     </NavDropdown.Item>
 
                                     <NavDropdown.Item as={'div'}>
@@ -82,7 +90,7 @@ const Navigation = () => {
                                 </>
                             }
                         </NavDropdown>
-                    </div>
+                    </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>

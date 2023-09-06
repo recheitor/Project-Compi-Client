@@ -1,14 +1,11 @@
 import { Container, Row, Col } from 'react-bootstrap'
+import HouseRooms from '../../components/HouseRooms/HouseRooms'
 
 const HomePage = () => {
 
     return (
         <Container className="HomePage">
-            <Row>
-                <Col md={{ span: 8, offset: 2 }}>
-                    <h1>COMPI</h1>
-                </Col>
-            </Row>
+            <HouseRooms />
         </Container>
     )
 }

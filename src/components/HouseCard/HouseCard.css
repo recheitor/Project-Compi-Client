@@ -1,0 +1,12 @@
+.HouseCard a {
+    text-decoration: none;
+}
+
+.HouseCard .card {
+    border: none;
+    border-radius: 2rem;
+}
+
+.HouseCard .carousel-inner {
+    border-radius: 1rem;
+}

@@ -1,10 +1,10 @@
-import { Container, Row, Form, Button, Modal } from 'react-bootstrap'
+import { Container, Row, Form, Button, Modal, Col } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import HouseCard from '../HouseCard/HouseCard';
 import Map from '../../components/Map/Map'
 import updateHouseRooms from '../../utils/updateHouseDetails';
-
+import './HouseRooms.css'
 
 let filterBy = {}
 
@@ -87,13 +87,13 @@ const HouseRooms = () => {
     }
 
     return (
-        <>
-            <Container>
+        <div className='HouseRooms'>
+            <Container className='mb-4'>
                 <Button variant="dark" onClick={handleShow}>
                     Filter
                 </Button>
 
-                <Button variant="dark" onClick={handleShowMap}>
+                <Button variant="dark" className='ShowMap' onClick={handleShowMap}>
                     {showMap ? 'Show List' : 'Show Map'}
                 </Button>
             </Container>
@@ -103,6 +103,7 @@ const HouseRooms = () => {
                     <Modal.Title>Filter rooms</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+
                     <Form.Group className="mb-3" controlId="beds">
                         <Form.Label>Min Beds</Form.Label>
                         <Form.Control type="number" value={filterData.beds} onChange={handleInputChange} name="beds" />
@@ -129,7 +130,7 @@ const HouseRooms = () => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="dark" onClick={handleClose}>
+                    <Button variant="dark" className='ModalFilterButton' onClick={handleClose}>
                         Filter
                     </Button>
                 </Modal.Footer>
@@ -146,11 +147,11 @@ const HouseRooms = () => {
                         <Row>
                             {
                                 houseData[0].price.housePrice ?
-                                    houseData.map(eachHouseData => {
+                                    houseData.map((eachHouseData, idx) => {
                                         return (
-                                            < >
-                                                <HouseCard key={eachHouseData.title} data={eachHouseData} />
-                                            </>
+                                            <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
+                                                <HouseCard data={eachHouseData} />
+                                            </Col>
                                         )
                                     })
                                     :
@@ -161,7 +162,7 @@ const HouseRooms = () => {
                     :
                     ''
             }
-        </>
+        </div>
     )
 }
 
