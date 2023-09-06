@@ -3,12 +3,14 @@ import houseServices from '../../services/house.services'
 import { useEffect, useState } from 'react'
 import HouseCard from '../HouseCard/HouseCard';
 import Map from '../../components/Map/Map'
+import updateHouseRooms from '../../utils/updateHouseDetails';
 
 let filterBy = {}
 
 const HouseRooms = () => {
 
     const [show, setShow] = useState(false)
+    const [showMap, setShowMap] = useState(false)
 
     const [houseData, setHouseData] = useState([{
         title: '',
@@ -50,18 +52,7 @@ const HouseRooms = () => {
         filterBy = filterBy ? filterBy : []
         houseServices
             .getHousesbyType('shared', filterBy)
-            .then(({ data: RoomDetails }) => {
-                RoomDetails.forEach(eachHouse => {
-                    let totalScore = 0
-                    eachHouse.rating.forEach(({ score }) => totalScore += score)
-                    totalScore = totalScore / eachHouse.rating.length
-                    eachHouse.totalScore = totalScore
-                    let updateLocation = { lat: eachHouse.location.coordinates[1], lng: eachHouse.location.coordinates[0] }
-                    eachHouse.location.coordinates = updateLocation
-                })
-                setHouseData(RoomDetails)
-            }
-            )
+            .then(({ data: RoomDetails }) => setHouseData(updateHouseRooms(RoomDetails)))
             .catch(err => console.log(err))
     }
 
@@ -80,11 +71,24 @@ const HouseRooms = () => {
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
+    const handleShowMap = () => {
+        showMap ?
+            setShowMap(false)
+            :
+            setShowMap(true)
+    }
+
     return (
         <>
-            <Button variant="dark" onClick={handleShow}>
-                Filter
-            </Button>
+            <Container>
+                <Button variant="dark" onClick={handleShow}>
+                    Filter
+                </Button>
+
+                <Button variant="dark" onClick={handleShowMap}>
+                    {showMap ? 'Show List' : 'Show Map'}
+                </Button>
+            </Container>
 
             <Modal show={show} onHide={handleClose}>
 
@@ -127,28 +131,32 @@ const HouseRooms = () => {
             </Modal>
 
             {
-                houseData[0].location ?
-                    < Map houseData={houseData} />
+                showMap && houseData[0].location ?
+                    < Map houseData={houseData} zoom={5} />
                     :
                     ''
             }
-
-            <Container className='mt-3'>
-                <Row>
-                    {
-                        houseData[0].price.housePrice ?
-                            houseData.map(eachHouseData => {
-                                return (
-                                    < >
-                                        <HouseCard key={eachHouseData.title} data={eachHouseData} />
-                                    </>
-                                )
-                            })
-                            :
-                            ''
-                    }
-                </Row >
-            </Container>
+            {
+                !showMap ?
+                    <Container className='mt-3'>
+                        <Row>
+                            {
+                                houseData[0].price.housePrice ?
+                                    houseData.map(eachHouseData => {
+                                        return (
+                                            < >
+                                                <HouseCard key={eachHouseData.title} data={eachHouseData} />
+                                            </>
+                                        )
+                                    })
+                                    :
+                                    ''
+                            }
+                        </Row >
+                    </Container>
+                    :
+                    ''
+            }
         </>
     )
 }

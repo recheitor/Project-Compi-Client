@@ -7,7 +7,7 @@ const HouseCard = ({ data }) => {
     return (
         data.address.city ?
 
-            <Col lg={{ span: 3 }} md={{ span: 6 }}>
+            <Col lg={{ span: 4 }} md={{ span: 6 }}>
                 <article className='HouseCard m-3'>
                     <Card style={{ width: '20rem' }}>
                         <GalleryCarousel gallery={data.gallery} size={'16rem'} />
