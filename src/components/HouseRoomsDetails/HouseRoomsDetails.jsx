@@ -5,7 +5,7 @@ import bookingServices from '../../services/booking.services'
 
 
 import { Link, useNavigate } from 'react-router-dom'
-import { useJsApiLoader, GoogleMap, MarkerF, InfoBox } from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
 
 
 import { useParams } from 'react-router-dom'
@@ -88,7 +88,6 @@ const HouseRoomsDetails = () => {
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        Libraries: ['drawing']
     })
 
     if (!isLoaded) {
@@ -149,19 +148,7 @@ const HouseRoomsDetails = () => {
                         !houseData.price.housePrice
                             ? <p>cargando</p>
                             :
-                            // <GoogleMap center={houseData.location.coordinates} zoom={15} mapContainerStyle={{ width: '100%', height: '200px' }} >
-
-
-
-
-                            //     <MarkerF animation={google.maps.Animation.DROP} position={houseData.location.coordinates} onClick={markerClick} label={houseData.price.housePrice.toString()} icon='https://res.cloudinary.com/dbtmrinwa/image/upload/v1693865669/aeasrxf2ecvgvxcpxv6r.jpg' >
-
-                            //     </MarkerF>
-                            //     : ''
-
-
-                            // </GoogleMap>
-                            <Map />
+                            <Map houseData={[houseData]} />
                     }
                     {
                         houseData.rooms ?
