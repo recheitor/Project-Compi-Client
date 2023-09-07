@@ -20,7 +20,7 @@ class RatingService {
     }
 
     createRating(ratingData) {
-        return this.api.post('/create-rating', ratingData)
+        return this.api.post('/rate', ratingData)
     }
 
     deleteRating(rating_id) {

@@ -2,6 +2,11 @@ import { Row, Col, Form, Button } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import roomServices from '../../services/room.services'
 import bookingServices from '../../services/booking.services'
+import ratingService from '../../services/rating.services'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/auth.context'
+
+
 
 
 import { Link, useNavigate } from 'react-router-dom'
@@ -13,16 +18,19 @@ import { useEffect, useState } from 'react'
 import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts';
 import MapDetails from '../../components/MapDetails/MapDetails'
 import updateHouseRoomsDetails from "../../utils/updateDetails.utils";
+import Rating from '../Rating/Rating'
 
 
 const HouseRoomsDetails = () => {
+    const { loggedUser } = useContext(AuthContext)
 
     const navigate = useNavigate()
     const { rooms_house_id } = useParams()
-    const markerClick = () => {
-        alert('Hi')
-    }
-    let label = ''
+
+    const [score, setScore] = useState(
+        { score: '' }
+    )
+
     const [houseData, setHouseData] = useState({
         title: '',
         gallery: [],
@@ -68,9 +76,11 @@ const HouseRoomsDetails = () => {
         bookingServices
             .getAllRoomBookings(rooms_house_id)
             .then(({ data }) => {
-                setAllBookingsData(data)
+                // setAllBookingsData(data)
             })
             .catch(err => console.log(err))
+
+
     }
 
     const { isLoaded } = useJsApiLoader({
@@ -90,6 +100,28 @@ const HouseRoomsDetails = () => {
             .catch(err => console.log(err))
     }
 
+    const handleScoreFormSubmit = e => {
+        e.preventDefault()
+        score.referedTo = 'House'
+        score.referedToId = rooms_house_id
+
+        ratingService
+            .createRating(score)
+            .then(() => getHouseRoomForm())
+            .catch(err => console.log(err))
+
+    }
+
+
+
+    const handleScoreInputChange = (value) => {
+        setScore({ score: value })
+    }
+
+    let shouldRenderContent
+    if (houseData.rating) {
+        shouldRenderContent = !houseData.rating.some((ratedBy) => ratedBy.userId === loggedUser._id);
+    }
 
 
     return (
@@ -174,6 +206,14 @@ const HouseRoomsDetails = () => {
                                                 )
 
                                             })
+                                        }
+                                        {
+                                            shouldRenderContent ?
+                                                <Form onSubmit={handleScoreFormSubmit}>
+                                                    <Rating handleScoreInputChange={handleScoreInputChange} />
+                                                </Form>
+                                                :
+                                                <p>USER ALREADY RATED THIS HOUSE</p>
                                         }
                                         <br />
                                         <br />

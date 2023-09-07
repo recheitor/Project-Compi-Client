@@ -33,7 +33,6 @@ function Map({ houseData, zoom }) {
             return;
         }
         setActiveMarker(idx);
-        // setCenterMap(marker)
     };
 
 
@@ -46,7 +45,6 @@ function Map({ houseData, zoom }) {
         <GoogleMap
             zoom={zoom}
             center={centerMap}
-            // onClick={() => setActiveMarker(-1)}
             mapContainerStyle={{ width: "100vw", height: "80vh" }}
             options={{ styles: customMapStyle }}
         >
@@ -68,9 +66,6 @@ function Map({ houseData, zoom }) {
                                     (
                                         <InfoBox
                                             options={infoBoxOpts}
-                                        // onClick={() => handleInfoBoxClick(_id)}
-
-
                                         >
                                             <Link as={'div'} to={`/rooms/${_id}`}>
                                                 <div style={{ width: '130px', height: '100px' }}>

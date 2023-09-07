@@ -7,11 +7,13 @@ import updateHouseRooms from '../../utils/updateHouseDetails';
 import './HouseRooms.css'
 
 let filterBy = {}
+let filterQuery = ''
 
 const HouseRooms = () => {
 
     const [show, setShow] = useState(false)
     const [showMap, setShowMap] = useState(false)
+
 
     const [houseData, setHouseData] = useState([{
         title: '',
@@ -55,7 +57,11 @@ const HouseRooms = () => {
         houseServices
 
             .getHousesbyType('shared', filterBy)
-            .then(({ data: RoomDetails }) => setHouseData(updateHouseRooms(RoomDetails)))
+            .then(({ data: RoomDetails }) => {
+
+                setHouseData(updateHouseRooms(RoomDetails))
+            }
+            )
             .catch(err => console.log(err))
     }
 
@@ -64,7 +70,7 @@ const HouseRooms = () => {
 
         filterBy = { ...filterBy, [name]: value }
 
-        let filterQuery = ''
+        filterQuery = ''
         for (const property in filterBy) {
             filterQuery += `&${property}=${filterBy[property]}`
 
@@ -72,11 +78,29 @@ const HouseRooms = () => {
         }
         filterQuery = filterQuery.slice(1)
 
-        getHouseRoomFormQuery(filterQuery)
         setFilterData({ ...filterData, ...filterBy })
     }
 
-    const handleClose = () => setShow(false)
+    const handleClose = () => {
+        getHouseRoomFormQuery(filterQuery)
+        setShow(false)
+    }
+
+    const handleReset = () => {
+
+        filterQuery = null
+        filterBy = null
+
+        setFilterData({
+            beds: '',
+            bathrooms: '',
+            maxGuests: '',
+            rooms: '',
+            price: '',
+            city: ''
+        })
+    }
+
     const handleShow = () => setShow(true)
 
     const handleShowMap = () => {
@@ -128,10 +152,19 @@ const HouseRooms = () => {
                         <Form.Label>Max Price</Form.Label>
                         <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
                     </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="city">
+                        <Form.Label>City</Form.Label>
+                        <Form.Control type="text" value={filterData.city} onChange={handleInputChange} name="city" />
+                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="dark" className='ModalFilterButton' onClick={handleClose}>
                         Filter
+                    </Button>
+
+                    <Button variant="dark" className='ModalFilterButton' onClick={handleReset}>
+                        Reset Filter
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -152,6 +185,8 @@ const HouseRooms = () => {
                                             <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
                                                 <HouseCard data={eachHouseData} />
                                             </Col>
+
+
                                         )
                                     })
                                     :
