@@ -1,5 +1,5 @@
 .star-rating {
-    display: inline-flex;
+
     cursor: pointer;
 }
 
@@ -14,6 +14,6 @@
 }
 
 .star.filled {
-    color: rgb(176, 176, 177);
+    color: rgb(22, 22, 58);
     /* Color de las estrellas llenas (azul) */
 }

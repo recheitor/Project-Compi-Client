@@ -42,47 +42,49 @@ function Map({ houseData, zoom }) {
     }
 
     return (
-        <GoogleMap
-            zoom={zoom}
-            center={centerMap}
-            mapContainerStyle={{ width: "100vw", height: "80vh" }}
-            options={{ styles: customMapStyle }}
-        >
-            {
-                houseData.map(({ location, price, _id, gallery }, idx) => {
-                    return (
-                        < Marker
-                            key={idx}
-                            position={location.coordinates}
-                            onMouseOver={() => handleActiveMarker(location.coordinates, idx)}
-                            label={`${price.housePrice.toString()}€`}
-                            icon={{
-                                url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1693989316/rjuqeritzuuomp0cnuyj.png',
-                                scaledSize: new window.google.maps.Size(50, 25)
-                            }}
-                        >
-                            {
-                                activeMarker == idx ?
-                                    (
-                                        <InfoBox
-                                            options={infoBoxOpts}
-                                        >
-                                            <Link as={'div'} to={`/rooms/${_id}`}>
-                                                <div style={{ width: '130px', height: '100px' }}>
-                                                    <GalleryCarousel gallery={gallery} size={'100px'} />
+        houseData[0].location.coordinates ?
+            <GoogleMap
+                zoom={zoom}
+                center={centerMap}
+                mapContainerStyle={{ width: "100vw", height: "79vh", position: 'absolute', bottom: '41px', left: '0' }}
+                options={{ styles: customMapStyle }}
+            >
+                {
+                    houseData.map(({ location, price, _id, gallery }, idx) => {
+                        return (
+                            < Marker
+                                key={idx}
+                                position={location.coordinates}
+                                onMouseOver={() => handleActiveMarker(location.coordinates, idx)}
+                                label={`${price.housePrice.toString()}€`}
+                                icon={{
+                                    url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1693989316/rjuqeritzuuomp0cnuyj.png',
+                                    scaledSize: new window.google.maps.Size(50, 25)
+                                }}
+                            >
+                                {
+                                    activeMarker == idx ?
+                                        (
+                                            <InfoBox
+                                                options={infoBoxOpts}
+                                            >
+                                                <Link as={'div'} to={`/rooms/${_id}`}>
+                                                    <div style={{ width: '130px', height: '100px' }}>
+                                                        <GalleryCarousel gallery={gallery} size={'100px'} />
 
-                                                </div>
-                                            </Link>
-                                        </InfoBox>
-                                    )
-                                    :
-                                    null
-                            }
-                        </Marker>
-                    )
-                })
-            }
-        </GoogleMap >
+                                                    </div>
+                                                </Link>
+                                            </InfoBox>
+                                        )
+                                        :
+                                        null
+                                }
+                            </Marker>
+                        )
+                    })
+                }
+            </GoogleMap >
+            : 'cargando'
     );
 }
 export default Map;
