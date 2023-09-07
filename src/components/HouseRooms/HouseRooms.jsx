@@ -161,39 +161,45 @@ const HouseRooms = () => {
                 <Row className='justify-content-between'>
                     <Col lg={{ span: 3 }} md={{ span: 6 }}>
                         <Row>
-                            {
-                                loggedUser ?
-                                    <>
-                                        <Col lg={{ span: 3 }} md={{ span: 6 }}>
-                                            <Button variant="dark" onClick={handleShow}>
-                                                Filter
-                                            </Button>
-                                        </Col>
-                                        <Col lg={{ span: 9 }} md={{ span: 6 }} >
-                                            <Form.Group className="mb-3" controlId="province">
-                                                <Form.Select size="sm" value={filterData.province} name='province' onChange={handleCityFilter}>
-                                                    <option key='Select' value={''}>Todas las provincias</option>
-                                                    {
-                                                        AUTONOMIC_COMUNITIES_FILTER_NAME.map((eachComunity, idx) => {
-                                                            return (
-                                                                <option
-                                                                    key={eachComunity}
-                                                                    value={AUTONOMIC_COMUNITIES_FILTER_VALUE[idx]}
-                                                                >
-                                                                    {eachComunity}
-                                                                </option>
-                                                            )
-                                                        })
-                                                    }
-                                                </Form.Select>
-                                            </Form.Group>
-                                        </Col>
-                                    </>
-
+                            <Col lg={{ span: 3 }} md={{ span: 6 }}>
+                                {loggedUser ?
+                                    <Button variant="dark" onClick={handleShow}>
+                                        Filter
+                                    </Button>
                                     :
-                                    ''
-                            }
+                                    <div className='mb-5'>
 
+                                    </div>}
+                            </Col>
+                            <Col lg={{ span: 9 }} md={{ span: 6 }} >
+
+                                <Form.Group className="mb-3" controlId="province">
+                                    {
+                                        loggedUser ?
+                                            <Form.Select size="sm" value={filterData.province} name='province' onChange={handleCityFilter}>
+
+                                                <option key='Select' value={''}>Todas las provincias</option>
+                                                {
+                                                    AUTONOMIC_COMUNITIES_FILTER_NAME.map((eachComunity, idx) => {
+                                                        return (
+                                                            <option
+                                                                key={eachComunity}
+                                                                value={AUTONOMIC_COMUNITIES_FILTER_VALUE[idx]}
+                                                            >
+                                                                {eachComunity}
+                                                            </option>
+                                                        )
+                                                    })
+                                                }
+
+                                            </Form.Select>
+                                            :
+                                            ''
+                                    }
+                                </Form.Group>
+
+
+                            </Col>
                         </Row>
 
 
@@ -270,10 +276,13 @@ const HouseRooms = () => {
             {
                 houseData ?
                     showMap &&
-                    < Map houseData={houseData} zoom={5} />
+                    < Map houseData={houseData} zoom={6} />
                     :
                     showMap &&
-                    'NO HAY MAPAS'
+                    <Col lg={{ span: 3, offset: 2 }} className='text-center'>
+                        <img style={{ height: '40vh', marginTop: '50px', marginBottom: '30px' }} src="https://res.cloudinary.com/dbtmrinwa/image/upload/v1693994770/agzs58eqvik7ryjou9zb.png" alt="" />
+                        <h3>No hay casas que cumplan tus criterios de búsqueda 🥲</h3>
+                    </Col>
             }
             {
                 houseData ?
@@ -284,7 +293,7 @@ const HouseRooms = () => {
                                 houseData[0].price.housePrice &&
                                 houseData.map((eachHouseData, idx) => {
                                     return (
-                                        <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
+                                        <Col key={idx} lg={{ span: 3 }} md={{ span: 6 }}>
                                             <HouseCard data={eachHouseData} />
                                         </Col>
 
@@ -296,7 +305,12 @@ const HouseRooms = () => {
                     </Container>
                     :
                     !showMap &&
-                    ' NO HAY CASAS'
+
+                    <Col lg={{ span: 3, offset: 2 }} className='text-center'>
+                        <img style={{ height: '40vh', marginTop: '50px', marginBottom: '30px' }} src="https://res.cloudinary.com/dbtmrinwa/image/upload/v1693994770/agzs58eqvik7ryjou9zb.png" alt="" />
+                        <h3>No hay casas que cumplan tus criterios de búsqueda 🥲</h3>
+                    </Col>
+
             }
         </div >
     )

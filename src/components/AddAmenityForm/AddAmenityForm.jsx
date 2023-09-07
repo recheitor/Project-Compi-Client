@@ -58,7 +58,7 @@ const AddAmenityForm = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="icon">
-                    <Form.Label>Icon (URL)</Form.Label>
+                    <Form.Label>Icon</Form.Label>
                     <Form.Control type="file" onChange={handleFileUpload} />
                 </Form.Group>
 

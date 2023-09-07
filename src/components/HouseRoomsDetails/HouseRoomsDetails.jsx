@@ -113,8 +113,10 @@ const HouseRoomsDetails = () => {
                                     <h1>{houseData.title}</h1>
                                     <h2>{houseData.address.city}, {houseData.address.country}</h2>
                                     {
-                                        houseData.totalScore &&
-                                        <p>★ {houseData.totalScore}</p>
+                                        houseData.totalScore ?
+                                            <p>★ {houseData.totalScore}</p>
+                                            :
+                                            <p>★ Not Rated</p>
                                     }
                                 </Col>
                                 <Col className="text-end pt-3">
@@ -176,10 +178,13 @@ const HouseRoomsDetails = () => {
                                             {
                                                 houseData.amenities.map((eachAmenity, idx) => {
                                                     return (
-                                                        <div key={idx}>
-                                                            <p>{eachAmenity.amenity.name}</p>
-                                                            <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
-                                                        </div>
+                                                        eachAmenity.included ?
+                                                            <div key={idx}>
+                                                                <p>{eachAmenity.amenity.name}</p>
+                                                                <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
+                                                            </div>
+                                                            :
+                                                            ''
                                                     )
                                                 })
                                             }
@@ -283,6 +288,8 @@ const HouseRoomsDetails = () => {
                             <p>You've already rated this house</p>
                     }
                     {
+
+
                         houseData.rating &&
                         houseData.rating.map(eachRating => {
                             return (

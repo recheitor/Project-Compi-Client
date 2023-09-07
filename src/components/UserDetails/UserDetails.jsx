@@ -57,26 +57,18 @@ const UserDetails = () => {
     if (userData.rating) {
         shouldRenderContent = !userData.rating.some((ratedBy) => ratedBy.userId._id === loggedUser._id)
     }
-    console.log(shouldRenderContent)
+
 
     return (
         <Container className="AccountPage">
-            <Row>
-                <Col md={{ span: 8, offset: 2 }}>
+            <Row >
+                <Col md={{ span: 8, offset: 2 }} className='text-center'>
 
-                    <Form onSubmit={handleFormSubmit} >
-                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete</Button>
-                    </Form>
 
-                    <h1>{userData.firstName}'s account</h1>
 
                     <img src={userData.avatar} style={{ height: '100px' }} alt={`${userData.firstName} avatar`} />
                     <h2>{userData.firstName} {userData.lastName}</h2>
-                    <h2>{userData.email}</h2>
                     <p>{userData.bio}</p>
-
-                    <hr />
-
 
                     <hr />
 
@@ -98,8 +90,11 @@ const UserDetails = () => {
                             <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
 
                             :
-                            <p>USER ALREADY RATED THIS USER</p>
+                            ''
                     }
+                    <Form onSubmit={handleFormSubmit} >
+                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete Profile</Button>
+                    </Form>
 
                 </Col>
             </Row >

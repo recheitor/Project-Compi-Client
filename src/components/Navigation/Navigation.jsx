@@ -44,7 +44,9 @@ const Navigation = () => {
                                         Add your house
                                     </Link>
                                 </Nav>
-
+                                <Nav className='mt-2'>
+                                    |
+                                </Nav>
                                 <Nav className="me-auto">
                                     <Link
                                         to={'/rooms-create'}
@@ -79,10 +81,6 @@ const Navigation = () => {
                                 <>
                                     <NavDropdown.Item as={'div'}>
                                         <Link to={'#messages'} className='nav-link'>Messages</Link>
-                                    </NavDropdown.Item>
-
-                                    <NavDropdown.Item as={'div'}>
-                                        <Link to={'#favs'} className='nav-link'>Favorite rooms</Link>
                                     </NavDropdown.Item>
 
                                     <NavDropdown.Item as={'div'}>

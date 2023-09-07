@@ -6,6 +6,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import bookingService from '../../services/booking.services'
 import GalleryCarousel from '../../components/GalleryCarousel/GalleryCarousel'
 
+import Rating from '../../components/Ratings/Ratings'
+import RateUser from '../../components/RateUser/RateUser'
+
+
 const AccountPage = () => {
 
     const navigate = useNavigate()
@@ -43,16 +47,16 @@ const AccountPage = () => {
             .catch(err => console.log(err))
     }
 
-    const handleDeleteUserSubmit = e => {
+    const handleFormSubmit = e => {
         e.preventDefault()
         userService
-            .deleteUser(user_id)
+            .deleteUser(id)
             .then(() => {
-                logout()
-                navigate('/')
+                navigate('/users')
             })
             .catch(err => console.log(err))
     }
+
 
     const handleDeleteBookingSubmit = (_id) => e => {
         e.preventDefault()
@@ -64,86 +68,50 @@ const AccountPage = () => {
             })
             .catch(err => console.log(err))
     }
+    let shouldRenderContent
+    if (userData.rating) {
+        shouldRenderContent = !userData.rating.some((ratedBy) => ratedBy.userId._id === loggedUser._id)
+    }
 
     return (
         <Container className="AccountPage">
-            <Row>
-                <Col md={{ span: 8, offset: 2 }}>
+            <Row className='justify-content-center'>
+                <Col md={{ span: 6 }} className='text-center'>
 
-                    <h1>{userData.firstName}'s account</h1>
 
-                    <Link to={`/profile-edit/${userData._id}`} className='btn btn-warning d-block' style={{ width: '200px' }}>Edit profile</Link>
-                    <Form onSubmit={handleDeleteUserSubmit} >
-                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete</Button>
-                    </Form>
 
                     <img src={userData.avatar} style={{ height: '100px' }} alt={`${userData.firstName} avatar`} />
                     <h2>{userData.firstName} {userData.lastName}</h2>
-                    <h2>{userData.email}</h2>
                     <p>{userData.bio}</p>
 
                     <hr />
 
-                    <h3>Favs:</h3>
-                    <ul>
-                        {
-                            userData.favorites.map(({ title }, idx) => {
+                    {
+                        !userData.rating
+                            ?
+                            <p>cargando</p>
+                            :
+                            userData.rating.map(eachRating => {
                                 return (
-                                    <li key={idx}>{title}</li>
+                                    <Rating rating={eachRating} />
                                 )
                             })
-                        }
-                    </ul>
-                    <hr />
-
-                    <h3>Ratings:</h3>
-                    <br />
-                    {
-                        userData.rating.map(({ score, userId, comment }, idx) => {
-                            return (
-                                <div key={idx}>
-                                    <ul>
-                                        <li>{score}</li>
-                                        <li>{userId.firstName} {userId.lastName}</li>
-                                        <li>{comment}</li>
-                                    </ul>
-                                    <hr />
-                                </div>
-                            )
-                        })
                     }
 
-                    <br />
-
-                    <h3>Bookings:</h3>
-                    <br />
                     {
-                        userBookingsData.map((eachBooking, idx) => {
+                        shouldRenderContent ?
 
-                            eachBooking.bookingDates.entry = eachBooking.bookingDates.entry.split('T')[0]
-                            eachBooking.bookingDates.exit = eachBooking.bookingDates.exit.split('T')[0]
+                            <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
 
-                            return (
-                                <div key={idx}>
-                                    <figure style={{ width: '100%' }} >
-                                        <GalleryCarousel gallery={eachBooking.room.gallery} />
-                                    </figure>
-                                    <h3>Room: {eachBooking.room.title}</h3>
-                                    <ul>
-                                        <li>Entry: {eachBooking.bookingDates.entry}</li>
-                                        <li>Exit: {eachBooking.bookingDates.exit}</li>
-                                    </ul>
-                                    <h4>Price: {eachBooking.price}</h4>
-
-                                    <Form onSubmit={handleDeleteBookingSubmit(eachBooking._id)} >
-                                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Cancel Booking</Button>
-                                    </Form>
-
-                                    <hr />
-                                </div>
-                            )
-                        })
+                            :
+                            ''
                     }
+                    <Link to={`/profile-edit/${userData._id}`} className='btn btn-warning mb-3' style={{ width: '200px' }}>Edit profile</Link>
+
+                    <Form onSubmit={handleFormSubmit} >
+                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete Profile</Button>
+                    </Form>
+
                 </Col>
             </Row >
         </Container >

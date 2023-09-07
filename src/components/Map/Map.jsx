@@ -36,17 +36,12 @@ function Map({ houseData, zoom }) {
     };
 
 
-
-    const handleInfoBoxClick = (house_id) => {
-        navigate(`/rooms/${house_id}`)
-    }
-
     return (
         houseData[0].location.coordinates ?
             <GoogleMap
                 zoom={zoom}
                 center={centerMap}
-                mapContainerStyle={{ width: "100vw", height: "79vh", position: 'absolute', bottom: '41px', left: '0' }}
+                mapContainerStyle={{ top: '160px', width: "100vw", height: "79vh", position: 'absolute', bottom: '41px', left: '0' }}
                 options={{ styles: customMapStyle }}
             >
                 {

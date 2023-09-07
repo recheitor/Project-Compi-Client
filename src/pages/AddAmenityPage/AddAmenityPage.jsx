@@ -5,8 +5,8 @@ const AddAmenityPage = () => {
 
     return (
         <Container className="AddAmenityPage">
-            <Row>
-                <Col md={{ span: 8, offset: 2 }}>
+            <Row className='justify-content-center'>
+                <Col md={{ span: 4 }}>
                     <h1>Add amenity</h1>
                     <hr />
                     <AddAmenityForm />
