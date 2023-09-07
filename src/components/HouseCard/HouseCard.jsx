@@ -9,20 +9,17 @@ const HouseCard = ({ data }) => {
         data.address.city ?
 
             <div className='HouseCard'>
-                <Link as={'div'} to={`/rooms/${data._id}`}>
-                    <Card style={{ width: '20rem' }}>
+                <Link as={'div'} to={`/rooms/${data._id}`} >
+                    <Card style={{ width: '20rem' }} className='mx-auto'>
                         <GalleryCarousel gallery={data.gallery} size={'16rem'} />
                         <Card.Body>
                             <Card.Title>{data.title}</Card.Title>
                             <Card.Text as={'div'}>
                                 <p>{data.address.city}, {data.address.country}</p>
                                 {
-                                    data.totalScore ?
-                                        <p>★ {data.totalScore}</p>
-                                        :
-                                        ''
+                                    data.totalScore &&
+                                    <p>★ {data.totalScore}</p>
                                 }
-                                {/* <p>★ {!data.totalScore ? ' Not rated' : data.totalScore}</p> */}
                             </Card.Text>
                         </Card.Body>
                     </Card>

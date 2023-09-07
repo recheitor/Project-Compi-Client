@@ -3,22 +3,16 @@ import houseServices from '../../services/house.services'
 import roomServices from '../../services/room.services'
 import bookingServices from '../../services/booking.services'
 import ratingService from '../../services/rating.services'
-import { useContext } from 'react'
 import { AuthContext } from '../../contexts/auth.context'
-
-
-
-
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useJsApiLoader } from "@react-google-maps/api";
-
-
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { HOUSE_INITIAL_COORDS } from '../../consts/house.consts';
 import MapDetails from '../../components/MapDetails/MapDetails'
 import updateHouseRoomsDetails from "../../utils/updateDetails.utils";
-import Rating from '../Rating/Rating'
+import Rating from '../Ratings/Ratings'
+import RateHouse from '../RateHouse/RateHouse'
+import GalleryCarousel from '../GalleryCarousel/GalleryCarousel'
 
 
 const HouseRoomsDetails = () => {
@@ -26,10 +20,6 @@ const HouseRoomsDetails = () => {
 
     const navigate = useNavigate()
     const { rooms_house_id } = useParams()
-
-    const [score, setScore] = useState(
-        { score: '' }
-    )
 
     const [houseData, setHouseData] = useState({
         title: '',
@@ -63,8 +53,6 @@ const HouseRoomsDetails = () => {
         getHouseRoomForm()
     }, [])
 
-
-
     const getHouseRoomForm = () => {
 
         houseServices
@@ -79,8 +67,6 @@ const HouseRoomsDetails = () => {
                 // setAllBookingsData(data)
             })
             .catch(err => console.log(err))
-
-
     }
 
     const { isLoaded } = useJsApiLoader({
@@ -100,50 +86,56 @@ const HouseRoomsDetails = () => {
             .catch(err => console.log(err))
     }
 
-    const handleScoreFormSubmit = e => {
-        e.preventDefault()
-        score.referedTo = 'House'
-        score.referedToId = rooms_house_id
-
-        ratingService
-            .createRating(score)
-            .then(() => getHouseRoomForm())
-            .catch(err => console.log(err))
-
-    }
-
-
-
-    const handleScoreInputChange = (value) => {
-        setScore({ score: value })
-    }
-
     let shouldRenderContent
     if (houseData.rating) {
         shouldRenderContent = !houseData.rating.some((ratedBy) => ratedBy.userId === loggedUser._id);
     }
 
-
     return (
-
         <>
             <Row>
                 <Col>
-                    <p>House Title:{houseData.title}</p>
-                    <p>House Description:{houseData.description}</p>
-                    <p>House Max guests: {houseData.info.maxGuests}</p>
-                    <p>House rooms: {houseData.info.rooms}</p>
-                    <p>House beds: {houseData.info.beds}</p>
-                    <p>House bathrooms: {houseData.info.bathrooms}</p>
-                    <p>House price: {houseData.price.housePrice}€ </p>
-                    <p>House Cleaning price: {houseData.price.cleaningPrice}€ </p>
-                    <p>House Owner: {houseData.owner.firstName} {houseData.owner.lastName} </p>
-                    <p>House rating:
-                        {
-                            !houseData.totalScore ? ' Not rated' : houseData.totalScore
-                        }
-                    </p>
-                    <p>House amenities: </p>
+
+                    {houseData.title ?
+                        <>
+                            <h1>{houseData.title}</h1>
+                            <h2>{houseData.address.city}, {houseData.address.country}</h2>
+                            {
+                                houseData.totalScore &&
+                                <p>★ {houseData.totalScore}</p>
+                            }
+
+                            <h4>Hosted by {houseData.owner.firstName} {houseData.owner.lastName} </h4>
+                            <div className="price-container">
+                                <h3>€ {houseData.price.housePrice}</h3>
+                                <span> night</span>
+                            </div>
+
+                            <GalleryCarousel gallery={houseData.gallery} size={'70vh'} />
+
+                            <br />
+                            <div className="description">
+                                <p>{houseData.description}</p>
+                            </div>
+
+                            <hr />
+
+                            <div className="house-info">
+                                <h4>House info: </h4>
+                                <ul>
+                                    <li>{houseData.info.maxGuests} guest</li>
+                                    <li>{houseData.info.rooms} rooms</li>
+                                    <li>{houseData.info.beds} beds</li>
+                                    <li>{houseData.info.bathrooms} bathrooms</li>
+                                </ul>
+                            </div>
+
+                            <p>House Cleaning price: {houseData.price.cleaningPrice}€ </p>
+
+                            <p>House amenities: </p>
+                        </>
+                        :
+                        'Loading...'}
                     {
                         houseData.amenities.map(eachAmenity => {
                             return (
@@ -154,82 +146,77 @@ const HouseRoomsDetails = () => {
                             )
                         })
                     }
-
                     {
-                        houseData.gallery.map(eachPhoto => {
+                        houseData.rooms &&
+                        houseData.rooms.map(eachRoom => {
                             return (
-                                <img key={eachPhoto} style={{ height: '100px' }} src={eachPhoto} alt="" />
+                                <div key={eachRoom.title}>
+                                    <p>room title:{eachRoom.title}</p>
+                                    <p>room description:{eachRoom.description}</p>
+                                    <p>bathroom type:{eachRoom.info.bathroom}</p>
+                                    <p>Beds: {eachRoom.info.beds}</p>
+                                    <p>Max guests: {eachRoom.info.maxGuests}</p>
+                                    <p>Room price: {eachRoom.price.roomPrice}</p>
+                                    <p>Room cleaning price: {eachRoom.price.cleaningPrice}</p>
+                                    {
+                                        eachRoom.gallery.map(eachRoomPhoto => {
+                                            return (
+                                                <img key={eachRoomPhoto} style={{ height: '100px' }} src={eachRoomPhoto} alt="" />
+                                            )
+                                        })
+                                    }
+
+                                    {
+
+                                        eachRoom.bookings.map(eachBooking => {
+                                            const fechaEntradaStr = eachBooking.bookingDates.entry
+                                            const fechaSalidaStr = eachBooking.bookingDates.exit
+
+                                            const fechaEntrada = new Date(fechaEntradaStr);
+                                            const fechaSalida = new Date(fechaSalidaStr);
+
+                                            const fechaActual = new Date();
+
+                                            return (
+                                                (fechaActual >= fechaEntrada && fechaActual <= fechaSalida) &&
+                                                <p>Living: {eachBooking.user.firstName} until: {eachBooking.bookingDates.exit}</p>
+                                            )
+
+                                        })
+                                    }
+                                    {
+                                        shouldRenderContent ?
+                                            <RateHouse getHouseRoomForm={getHouseRoomForm} toWhereRates={'House'} />
+                                            :
+                                            <p>USER ALREADY RATED THIS HOUSE</p>
+                                    }
+                                    <br />
+                                    <br />
+                                    <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
+                                    <br />
+                                    <br />
+                                    <Form onSubmit={handleFormSubmit(eachRoom._id)} >
+                                        <Button variant="danger" type="submit" >Delete</Button>
+                                    </Form>
+                                    <Link className='btn btn-warning' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
+                                </div>
                             )
                         })
                     }
 
                     {
-                        !houseData.price.housePrice
-                            ? <p>cargando</p>
+                        !houseData.rating
+                            ?
+                            <p>cargando</p>
                             :
-                            <MapDetails houseData={[houseData]} zoom={15} />
-                    }
-                    {
-                        houseData.rooms ?
-                            houseData.rooms.map(eachRoom => {
+                            houseData.rating.map(eachRating => {
                                 return (
-                                    <div key={eachRoom.title}>
-                                        <p>room title:{eachRoom.title}</p>
-                                        <p>room description:{eachRoom.description}</p>
-                                        <p>bathroom type:{eachRoom.info.bathroom}</p>
-                                        <p>Beds: {eachRoom.info.beds}</p>
-                                        <p>Max guests: {eachRoom.info.maxGuests}</p>
-                                        <p>Room price: {eachRoom.price.roomPrice}</p>
-                                        <p>Room cleaning price: {eachRoom.price.cleaningPrice}</p>
-                                        {
-                                            eachRoom.gallery.map(eachRoomPhoto => {
-                                                return (
-                                                    <img key={eachRoomPhoto} style={{ height: '100px' }} src={eachRoomPhoto} alt="" />
-                                                )
-                                            })
-                                        }
-
-                                        {
-
-                                            eachRoom.bookings.map(eachBooking => {
-                                                const fechaEntradaStr = eachBooking.bookingDates.entry
-                                                const fechaSalidaStr = eachBooking.bookingDates.exit
-
-                                                const fechaEntrada = new Date(fechaEntradaStr);
-                                                const fechaSalida = new Date(fechaSalidaStr);
-
-                                                const fechaActual = new Date();
-
-                                                return (
-                                                    (fechaActual >= fechaEntrada && fechaActual <= fechaSalida) &&
-                                                    <p>Living: {eachBooking.user.firstName} until: {eachBooking.bookingDates.exit}</p>
-                                                )
-
-                                            })
-                                        }
-                                        {
-                                            shouldRenderContent ?
-                                                <Form onSubmit={handleScoreFormSubmit}>
-                                                    <Rating handleScoreInputChange={handleScoreInputChange} />
-                                                </Form>
-                                                :
-                                                <p>USER ALREADY RATED THIS HOUSE</p>
-                                        }
-                                        <br />
-                                        <br />
-                                        <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
-                                        <br />
-                                        <br />
-                                        <Form onSubmit={handleFormSubmit(eachRoom._id)} >
-                                            <Button variant="danger" type="submit" >Delete</Button>
-                                        </Form>
-                                        <Link className='btn btn-warning' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
-                                    </div>
+                                    <Rating rating={eachRating} />
                                 )
                             })
-                            :
-                            ''
                     }
+
+                    <MapDetails houseData={[houseData]} zoom={15} />
                 </Col>
             </Row >
         </>

@@ -4,9 +4,9 @@ import HouseRooms from '../../components/HouseRooms/HouseRooms'
 const HomePage = () => {
 
     return (
-        <Container className="HomePage">
+        <div className="HomePage">
             <HouseRooms />
-        </Container>
+        </div>
     )
 }
 

@@ -5,6 +5,7 @@ import HouseCard from '../HouseCard/HouseCard';
 import Map from '../../components/Map/Map'
 import updateHouseRooms from '../../utils/updateHouseDetails';
 import './HouseRooms.css'
+import { Link } from 'react-router-dom';
 
 let filterBy = {}
 let filterQuery = ''
@@ -112,7 +113,7 @@ const HouseRooms = () => {
 
     return (
         <div className='HouseRooms'>
-            <Container className='mb-4'>
+            <Container className='options'>
                 <Button variant="dark" onClick={handleShow}>
                     Filter
                 </Button>
@@ -158,45 +159,48 @@ const HouseRooms = () => {
                         <Form.Control type="text" value={filterData.city} onChange={handleInputChange} name="city" />
                     </Form.Group>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="dark" className='ModalFilterButton' onClick={handleClose}>
-                        Filter
-                    </Button>
 
-                    <Button variant="dark" className='ModalFilterButton' onClick={handleReset}>
+                <Modal.Footer>
+                    <Button variant="secondary" className='ModalFilterButton' onClick={handleReset}>
                         Reset Filter
+                    </Button>
+                    <Button variant="dark" className='ModalFilterButton apply-filter' onClick={handleClose}>
+                        Filter
                     </Button>
                 </Modal.Footer>
             </Modal>
             {
-                showMap && houseData[0].location ?
-                    < Map houseData={houseData} zoom={5} />
-                    :
-                    ''
+                showMap &&
+                < Map houseData={houseData} zoom={5} />
             }
             {
-                !showMap ?
-                    <Container className='mt-3'>
-                        <Row>
-                            {
-                                houseData[0].price.housePrice ?
-                                    houseData.map((eachHouseData, idx) => {
-                                        return (
-                                            <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
-                                                <HouseCard data={eachHouseData} />
-                                            </Col>
+                !showMap &&
+                <Container fluid style={{ maxWidth: '1200px' }}>
+                    <Row>
+                        {
+                            houseData[0].price.housePrice &&
+                            houseData.map((eachHouseData, idx) => {
+                                return (
+                                    <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
+                                        <HouseCard data={eachHouseData} />
+                                    </Col>
 
 
-                                        )
-                                    })
-                                    :
-                                    ''
-                            }
-                        </Row >
-                    </Container>
-                    :
-                    ''
+                                )
+                            })
+                        }
+                    </Row >
+                </Container>
             }
+            <div className="footer border-top">
+                <p className='company-name'>© 2023 Compi, Inc.</p>
+                <p>·</p>
+                <Link to={'#terms'} className='nav-link'>Terms</Link>
+                <p>·</p>
+                <Link to={'#terms/privacy-policy'} className='nav-link'>Privacy</Link>
+                <p>·</p>
+                <Link to={'#help/privacy-choices'} className='nav-link'>Your Privacy Choices </Link>
+            </div>
         </div>
     )
 }
