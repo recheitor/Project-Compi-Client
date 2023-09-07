@@ -4,7 +4,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import userService from '../../services/user.services'
 import { useNavigate, useParams } from 'react-router-dom'
 import Rating from '../../components/Ratings/Ratings'
-import RateUser from '../../components/RateUser copy/RateUser'
+import RateUser from '../RateUser/RateUser'
 
 
 

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
 import amenityService from '../../services/amenity.services'
 import AutocompleteForm from "../AutocompleteForm/AutocompleteForm"
-
+import { AUTONOMIC_COMUNITIES_FILTER_NAME, AUTONOMIC_COMUNITIES_FILTER_VALUE } from "../../consts/house.consts"
 const AddHouseForm = () => {
 
     const navigate = useNavigate()
@@ -100,7 +100,10 @@ const AddHouseForm = () => {
 
 
     const getPlaceCoordinates = ({ lat, lng }) => {
-        setHouseData({ ...houseData, coordinates: [lng, lat] })
+        if (!houseData.coordinates) {
+            setHouseData({ ...houseData, coordinates: [lng, lat] })
+
+        }
     }
 
     return (
@@ -172,6 +175,24 @@ const AddHouseForm = () => {
                 <Form.Group className="mb-3" controlId="city">
                     <Form.Label>City</Form.Label>
                     <Form.Control type="text" value={houseData.city} name="city" onChange={handleInputChange} />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="province">
+                    <Form.Select size="sm" value={houseData.province} name='province' onChange={handleInputChange}>
+                        <option key='Select' value={''}>Todas las provincias</option>
+                        {
+                            AUTONOMIC_COMUNITIES_FILTER_NAME.map((eachComunity, idx) => {
+                                return (
+                                    <option
+                                        key={eachComunity}
+                                        value={AUTONOMIC_COMUNITIES_FILTER_VALUE[idx]}
+                                    >
+                                        {eachComunity}
+                                    </option>
+                                )
+                            })
+                        }
+                    </Form.Select>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="country">

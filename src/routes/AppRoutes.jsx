@@ -25,6 +25,8 @@ const AppRoutes = () => {
             <Route path={'/'} element={<HomePage />} />
             <Route path={'/signup'} element={<SignupPage />} />
             <Route path={'/login'} element={<LoginPage />} />
+            <Route path={'/rooms'} element={<ShowHouseRoomsPage />} />
+
 
             <Route element={<PrivateRoutes />}>
                 <Route path={'/account'} element={<AccountPage />} />
@@ -36,7 +38,6 @@ const AppRoutes = () => {
                 <Route path={'/house-create'} element={<AddHousePage />} />
                 <Route path={'/house-edit/:id'} element={<EditHousePage />} />
 
-                <Route path={'/rooms'} element={<ShowHouseRoomsPage />} />
                 <Route path={'/rooms/:rooms_house_id'} element={<ShowHouseRoomsPageDetails />} />
                 <Route path={'/rooms-create'} element={<AddRoomPage />} />
                 <Route path={'/rooms-edit/:id'} element={<EditRoomPage />} />
