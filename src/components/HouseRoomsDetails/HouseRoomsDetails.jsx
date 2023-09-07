@@ -1,8 +1,7 @@
-import { Row, Col, Form, Button } from 'react-bootstrap'
+import { Row, Col, Form, Button, Accordion } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
 import roomServices from '../../services/room.services'
 import bookingServices from '../../services/booking.services'
-import ratingService from '../../services/rating.services'
 import { AuthContext } from '../../contexts/auth.context'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useJsApiLoader } from "@react-google-maps/api";
@@ -13,7 +12,7 @@ import updateHouseRoomsDetails from "../../utils/updateDetails.utils";
 import Rating from '../Ratings/Ratings'
 import RateHouse from '../RateHouse/RateHouse'
 import GalleryCarousel from '../GalleryCarousel/GalleryCarousel'
-
+import './HouseRoomsDetails.css'
 
 const HouseRoomsDetails = () => {
     const { loggedUser } = useContext(AuthContext)
@@ -76,7 +75,18 @@ const HouseRoomsDetails = () => {
     if (!isLoaded) {
         return 'Loading'
     }
-    const handleFormSubmit = (room_id) => e => {
+
+    const houseHandleFormSubmit = (house_id) => e => {
+
+        e.preventDefault()
+
+        houseServices
+            .deleteHouse(house_id, { house_id })
+            .then(() => navigate('/'))
+            .catch(err => console.log(err))
+    }
+
+    const roomHandleFormSubmit = (room_id) => e => {
 
         e.preventDefault()
 
@@ -88,138 +98,203 @@ const HouseRoomsDetails = () => {
 
     let shouldRenderContent
     if (houseData.rating) {
-        shouldRenderContent = !houseData.rating.some((ratedBy) => ratedBy.userId === loggedUser._id);
+        shouldRenderContent = !houseData.rating.some((ratedBy) => ratedBy.userId._id === loggedUser._id);
     }
 
     return (
-        <>
+        <div className='HouseRoomsDetails'>
             <Row>
                 <Col>
 
                     {houseData.title ?
                         <>
-                            <h1>{houseData.title}</h1>
-                            <h2>{houseData.address.city}, {houseData.address.country}</h2>
-                            {
-                                houseData.totalScore &&
-                                <p>★ {houseData.totalScore}</p>
-                            }
-
-                            <h4>Hosted by {houseData.owner.firstName} {houseData.owner.lastName} </h4>
-                            <div className="price-container">
-                                <h3>€ {houseData.price.housePrice}</h3>
-                                <span> night</span>
-                            </div>
+                            <Row className="house-header justify-content-between">
+                                <Col>
+                                    <h1>{houseData.title}</h1>
+                                    <h2>{houseData.address.city}, {houseData.address.country}</h2>
+                                    {
+                                        houseData.totalScore &&
+                                        <p>★ {houseData.totalScore}</p>
+                                    }
+                                </Col>
+                                <Col className="text-end pt-3">
+                                    <h4>Hosted by <Link to={`/user/${houseData.owner._id}`}>{houseData.owner.firstName} {houseData.owner.lastName}</Link></h4>
+                                    <div className="house-price-container">
+                                        <h3><strong>From</strong> € {houseData.price.housePrice}<strong> night</strong></h3>
+                                    </div>
+                                </Col>
+                            </Row>
 
                             <GalleryCarousel gallery={houseData.gallery} size={'70vh'} />
 
                             <br />
                             <div className="description">
+                                <h2>Something about the house...</h2>
                                 <p>{houseData.description}</p>
                             </div>
 
+                            <Row className='justify-content-between'>
+                                <Col>
+                                    <div className="house-info">
+                                        <h4>House info: </h4>
+                                        <ul>
+                                            <li>{houseData.info.maxGuests} Guests</li>
+                                            <li>{houseData.info.rooms} Rooms</li>
+                                            {
+                                                houseData.info.beds === 1 ?
+                                                    <li>{houseData.info.beds} Bed</li>
+                                                    :
+                                                    <li>{houseData.info.beds} Beds</li>
+                                            }
+                                            {
+                                                houseData.info.bathrooms === 1 ?
+                                                    <li>{houseData.info.bathrooms} Bathroom</li>
+                                                    :
+                                                    <li>{houseData.info.bathrooms} Bathrooms</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </Col>
+                                <Col className="text-end d-flex flex-column">
+                                    <p className='cleaning-price'>House Cleaning price <strong>€ {houseData.price.cleaningPrice}</strong></p>
+                                    <div className="mt-auto">
+                                        <Link className='btn btn-warning mb-1' to={`/house-edit/${houseData._id}`}>Edit</Link>
+                                        <Form onSubmit={houseHandleFormSubmit(houseData._id)}>
+                                            <Button variant="danger" type="submit">Delete</Button>
+                                        </Form>
+                                    </div>
+                                </Col>
+
+                            </Row>
+
+                            {
+                                houseData.amenities.length > 0 &&
+                                <Accordion>
+                                    <Accordion.Item eventKey="0">
+                                        <Accordion.Header>What this place offers</Accordion.Header>
+                                        <Accordion.Body>
+                                            {
+                                                houseData.amenities.map((eachAmenity, idx) => {
+                                                    return (
+                                                        <div key={idx}>
+                                                            <p>{eachAmenity.amenity.name}</p>
+                                                            <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+                            }
+
                             <hr />
 
-                            <div className="house-info">
-                                <h4>House info: </h4>
-                                <ul>
-                                    <li>{houseData.info.maxGuests} guest</li>
-                                    <li>{houseData.info.rooms} rooms</li>
-                                    <li>{houseData.info.beds} beds</li>
-                                    <li>{houseData.info.bathrooms} bathrooms</li>
-                                </ul>
-                            </div>
-
-                            <p>House Cleaning price: {houseData.price.cleaningPrice}€ </p>
-
-                            <p>House amenities: </p>
+                            {
+                                houseData.rooms &&
+                                <h2 className='rooms-title mt-5'>{houseData.title}'s rooms</h2>
+                            }
                         </>
                         :
                         'Loading...'}
                     {
-                        houseData.amenities.map(eachAmenity => {
-                            return (
-                                <>
-                                    <p key={eachAmenity.amenity.name}>{eachAmenity.amenity.name}</p>
-                                    <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
-                                </>
-                            )
-                        })
-                    }
-                    {
                         houseData.rooms &&
                         houseData.rooms.map(eachRoom => {
                             return (
-                                <div key={eachRoom.title}>
-                                    <p>room title:{eachRoom.title}</p>
-                                    <p>room description:{eachRoom.description}</p>
-                                    <p>bathroom type:{eachRoom.info.bathroom}</p>
-                                    <p>Beds: {eachRoom.info.beds}</p>
-                                    <p>Max guests: {eachRoom.info.maxGuests}</p>
-                                    <p>Room price: {eachRoom.price.roomPrice}</p>
-                                    <p>Room cleaning price: {eachRoom.price.cleaningPrice}</p>
-                                    {
-                                        eachRoom.gallery.map(eachRoomPhoto => {
-                                            return (
-                                                <img key={eachRoomPhoto} style={{ height: '100px' }} src={eachRoomPhoto} alt="" />
-                                            )
-                                        })
-                                    }
+                                <div key={eachRoom.title} className='Room'>
+                                    <Row className="room-header justify-content-between mb-3">
+                                        <Col>
+                                            <h2>{eachRoom.title}</h2>
+                                        </Col>
+                                        <Col className="text-end pt-3 room-price-container">
+                                            <h3>€ {eachRoom.price.roomPrice}<strong> night</strong></h3>
+                                        </Col>
+                                    </Row>
+
+                                    <GalleryCarousel gallery={eachRoom.gallery} size={'60vh'} />
+                                    <br />
+
+                                    <div className="description">
+                                        <h2>Something about the room...</h2>
+                                        <p>{eachRoom.description}</p>
+                                    </div>
+                                    <hr />
+
+                                    <div className="house-info">
+                                        <h4>Room info: </h4>
+                                        <ul>
+                                            <li>{eachRoom.info.maxGuests} guest</li>
+                                            {
+                                                eachRoom.info.beds === 1 ?
+                                                    <li>{eachRoom.info.beds} bed</li>
+                                                    :
+                                                    <li>{eachRoom.info.beds} beds</li>
+                                            }
+                                            <li>Bathroom type: {eachRoom.info.bathroom}</li>
+                                        </ul>
+                                    </div>
+
+                                    <p>€ {eachRoom.price.cleaningPrice} cleaning price</p>
 
                                     {
 
                                         eachRoom.bookings.map(eachBooking => {
-                                            const fechaEntradaStr = eachBooking.bookingDates.entry
-                                            const fechaSalidaStr = eachBooking.bookingDates.exit
+                                            const entryDateStr = eachBooking.bookingDates.entry
+                                            const exitDateStr = eachBooking.bookingDates.exit
 
-                                            const fechaEntrada = new Date(fechaEntradaStr);
-                                            const fechaSalida = new Date(fechaSalidaStr);
+                                            const entryDate = new Date(entryDateStr);
+                                            const exitDate = new Date(exitDateStr);
 
-                                            const fechaActual = new Date();
+                                            const actualDate = new Date();
 
                                             return (
-                                                (fechaActual >= fechaEntrada && fechaActual <= fechaSalida) &&
-                                                <p>Living: {eachBooking.user.firstName} until: {eachBooking.bookingDates.exit}</p>
+                                                (actualDate >= entryDate && actualDate <= exitDate) &&
+                                                <p>
+                                                    Rented by <Link
+                                                        to={`/user/${eachBooking.user._id}`}>
+                                                        {eachBooking.user.firstName} {eachBooking.user.lastName}
+                                                    </Link> until {eachBooking.bookingDates.exit.split('T')[0]}
+                                                </p>
                                             )
 
                                         })
                                     }
-                                    {
-                                        shouldRenderContent ?
-                                            <RateHouse getHouseRoomForm={getHouseRoomForm} toWhereRates={'House'} />
-                                            :
-                                            <p>USER ALREADY RATED THIS HOUSE</p>
-                                    }
-                                    <br />
-                                    <br />
+                                    <hr />
+
                                     <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
                                     <br />
-                                    <br />
-                                    <Form onSubmit={handleFormSubmit(eachRoom._id)} >
-                                        <Button variant="danger" type="submit" >Delete</Button>
-                                    </Form>
-                                    <Link className='btn btn-warning' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
+                                    <hr />
+
+                                    <div className="room-action-buttons">
+                                        <Form onSubmit={roomHandleFormSubmit(eachRoom._id)} >
+                                            <Button variant="danger" type="submit" >Delete</Button>
+                                        </Form>
+                                        <Link className='btn btn-warning' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
+                                    </div>
+                                    <hr />
                                 </div>
                             )
                         })
                     }
-
                     {
-                        !houseData.rating
-                            ?
-                            <p>cargando</p>
+                        shouldRenderContent ?
+                            <RateHouse getHouseRoomForm={getHouseRoomForm} toWhereRates={'House'} />
                             :
-                            houseData.rating.map(eachRating => {
-                                return (
-                                    <Rating rating={eachRating} />
-                                )
-                            })
+                            <p>You've already rated this house</p>
                     }
-
+                    {
+                        houseData.rating &&
+                        houseData.rating.map(eachRating => {
+                            return (
+                                <Rating rating={eachRating} />
+                            )
+                        })
+                    }
+                    <br />
                     <MapDetails houseData={[houseData]} zoom={15} />
                 </Col>
             </Row >
-        </>
+        </div >
     )
 }
 

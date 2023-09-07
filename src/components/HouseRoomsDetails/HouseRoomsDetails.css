@@ -1,0 +1,117 @@
+.HouseRoomsDetails {
+    color: rgb(33, 33, 33);
+}
+
+.HouseRoomsDetails .house-header h4 {
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.HouseRoomsDetails .house-header h1 {
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+.HouseRoomsDetails .house-header h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: rgb(133, 133, 133);
+}
+
+.HouseRoomsDetails .house-header p {
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+
+.HouseRoomsDetails .house-price-container{
+    margin-top: 1.4rem;
+}
+
+.HouseRoomsDetails .house-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.HouseRoomsDetails .house-header strong {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.HouseRoomsDetails .house-header a {
+    color: rgb(255, 187, 0);
+    text-decoration: none;
+}
+
+.HouseRoomsDetails .house-header a:hover {
+    color: rgb(255, 222, 133);
+}
+
+.HouseRoomsDetails .description {
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: rgba(246, 198, 67, 0.20);
+}
+
+.HouseRoomsDetails .description h2 {
+    font-size: 1.2rem;
+}
+
+.HouseRoomsDetails .description p {
+    font-size: 1rem;
+    margin-bottom: 0;
+    margin-left: 1rem;
+}
+
+.HouseRoomsDetails .house-info {
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 5px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.HouseRoomsDetails .house-info h4 {
+    font-size: 1.6rem;
+}
+
+.HouseRoomsDetails .house-info ul {
+    list-style-type: none;
+    font-weight: 300;
+    margin-top: 1.2rem;
+}
+
+.HouseRoomsDetails .house-info li {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: rgb(66, 66, 66);
+}
+
+.HouseRoomsDetails .cleaning-price {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: rgb(66, 66, 66);
+    margin-bottom: 0;
+}
+
+.HouseRoomsDetails .rooms-title {
+    font-size: 3rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    color: rgb(99, 99, 99);
+}
+
+.HouseRoomsDetails .room-header h2 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: rgb(255, 187, 0);
+}
+
+
+
+
+

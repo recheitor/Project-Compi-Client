@@ -1,7 +1,17 @@
+.navbar {
+    position: fixed;
+    top: 0;
+}
+
 .navbar-brand {
     margin-left: 6rem;
 }
 
 .nav-bar-dropdown{
     margin-right: 6rem;
+}
+
+.navbar-space {
+    height: 73px;
+    margin-bottom: 22.4px;
 }

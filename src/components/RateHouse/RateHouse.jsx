@@ -63,16 +63,15 @@ const Rate = ({ getHouseRoomForm }) => {
                         >
                             &#9733;
                         </div>
-
                     </>
-
                 ))}
+                <br />
+                <br />
                 <Form.Group className="mb-3" controlId="comment">
-                    <Form.Label>Comment</Form.Label>
-                    <Form.Control type="text" value={score.comment} name="comment" onChange={handleCommentInputChange} />
+                    <Form.Control type="text" placeholder="Comment" value={score.comment} name="comment" onChange={handleCommentInputChange} />
                 </Form.Group>
-                <Button type='submit' >
-                    Confirmar
+                <Button type='submit' variant="dark">
+                    Confirm
                 </Button>
 
             </Form>

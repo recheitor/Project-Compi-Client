@@ -1,0 +1,24 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    width: 100vw;
+    display: flex;
+    justify-content: start;
+    padding: 0.5rem;
+    color: rgb(111, 111, 111);
+}
+
+.footer .company-name {
+    margin-left: 2rem;
+    margin-right: 0;
+}
+
+.footer p {
+    margin: 0 1rem;
+}
+
+.footer-space {
+    height: 41px;
+    margin-top: 22.4px;
+}
