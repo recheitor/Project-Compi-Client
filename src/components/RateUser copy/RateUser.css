@@ -1,0 +1,19 @@
+.star-rating {
+
+    cursor: pointer;
+}
+
+.star {
+    font-size: 24px;
+    margin-right: 5px;
+
+    color: rgb(187, 185, 185);
+    /* Color de las estrellas vacías (blanco) */
+    transition: color 0.2s;
+    /* Transición suave para el cambio de color */
+}
+
+.star.filled {
+    color: rgb(22, 22, 58);
+    /* Color de las estrellas llenas (azul) */
+}

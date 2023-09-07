@@ -22,28 +22,31 @@ function Map({ houseData, zoom }) {
     }
 
     return (
-        <GoogleMap
-            zoom={zoom}
-            center={centerMap}
-            mapContainerStyle={{ width: "50vw", height: "40vh" }}
-            options={{ styles: customMapStyle }}
-        >
-            {
-                houseData.map(({ location }, idx) => {
-                    return (
-                        < Marker
-                            key={idx}
-                            position={location.coordinates}
-                            icon={{
-                                url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1694019495/qgvcwulxj6zt5jvy79su.png',
-                                scaledSize: new window.google.maps.Size(43, 70)
-                            }}
-                        >
-                        </Marker>
-                    )
-                })
-            }
-        </GoogleMap >
+        houseData[0].location.coordinates ?
+
+            <GoogleMap
+                zoom={zoom}
+                center={centerMap}
+                mapContainerStyle={{ width: "50vw", height: "40vh" }}
+                options={{ styles: customMapStyle }}
+            >
+                {
+                    houseData.map(({ location }, idx) => {
+                        return (
+                            < Marker
+                                key={idx}
+                                position={location.coordinates}
+                                icon={{
+                                    url: 'https://res.cloudinary.com/dbtmrinwa/image/upload/v1694019495/qgvcwulxj6zt5jvy79su.png',
+                                    scaledSize: new window.google.maps.Size(43, 70)
+                                }}
+                            >
+                            </Marker>
+                        )
+                    })
+                }
+            </GoogleMap >
+            : 'cargando'
     );
 }
 export default Map;
