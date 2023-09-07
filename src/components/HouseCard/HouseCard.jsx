@@ -17,8 +17,10 @@ const HouseCard = ({ data }) => {
                             <Card.Text as={'div'}>
                                 <p>{data.address.city}, {data.address.country}</p>
                                 {
-                                    data.totalScore &&
-                                    <p>★ {data.totalScore}</p>
+                                    data.totalScore ?
+                                        <p>★ {data.totalScore}</p>
+                                        :
+                                        <p>★ Not Rated</p>
                                 }
                             </Card.Text>
                         </Card.Body>

@@ -1,11 +1,12 @@
 import { Container, Row, Form, Button, Modal, Col } from 'react-bootstrap'
 import houseServices from '../../services/house.services'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import HouseCard from '../HouseCard/HouseCard';
 import Map from '../../components/Map/Map'
 import updateHouseRooms from '../../utils/updateHouseDetails';
 import './HouseRooms.css'
-import { Link } from 'react-router-dom';
+import { AUTONOMIC_COMUNITIES_FILTER_NAME, AUTONOMIC_COMUNITIES_FILTER_VALUE } from '../../consts/house.consts';
+import { AuthContext } from '../../contexts/auth.context'
 
 let filterBy = {}
 let filterQuery = ''
@@ -14,7 +15,7 @@ const HouseRooms = () => {
 
     const [show, setShow] = useState(false)
     const [showMap, setShowMap] = useState(false)
-
+    const { loggedUser } = useContext(AuthContext)
 
     const [houseData, setHouseData] = useState([{
         title: '',
@@ -50,8 +51,27 @@ const HouseRooms = () => {
     })
 
     useEffect(() => {
-        getHouseRoomFormQuery()
+        if (!loggedUser) {
+            getHouseRoomForm()
+        } else {
+            getHouseRoomFormQuery()
+        }
     }, [])
+
+    const getHouseRoomForm = () => {
+
+        houseServices
+            .getAllHouses()
+            .then(({ data: RoomDetails }) => {
+                if (RoomDetails.length >= 1) {
+                    setHouseData(updateHouseRooms(RoomDetails))
+                } else {
+                    setHouseData(false)
+                }
+            }
+            )
+            .catch(err => console.log(err))
+    }
 
     const getHouseRoomFormQuery = (filterBy) => {
         filterBy = filterBy ? filterBy : []
@@ -59,8 +79,11 @@ const HouseRooms = () => {
 
             .getHousesbyType('shared', filterBy)
             .then(({ data: RoomDetails }) => {
-
-                setHouseData(updateHouseRooms(RoomDetails))
+                if (RoomDetails.length >= 1) {
+                    setHouseData(updateHouseRooms(RoomDetails))
+                } else {
+                    setHouseData(false)
+                }
             }
             )
             .catch(err => console.log(err))
@@ -74,8 +97,6 @@ const HouseRooms = () => {
         filterQuery = ''
         for (const property in filterBy) {
             filterQuery += `&${property}=${filterBy[property]}`
-
-
         }
         filterQuery = filterQuery.slice(1)
 
@@ -87,10 +108,31 @@ const HouseRooms = () => {
         setShow(false)
     }
 
+    const handleCityFilter = e => {
+        handleInputChange(e)
+        getHouseRoomFormQuery(filterQuery)
+
+    }
+
+    const handleFavorite = () => {
+
+        filterBy.userFavorites = filterBy.userFavorites ? false : true
+
+        filterBy = { ...filterBy, userFavorites: filterBy.userFavorites }
+        filterQuery = ''
+        for (const property in filterBy) {
+            filterQuery += `&${property}=${filterBy[property]}`
+        }
+        filterQuery = filterQuery.slice(1)
+
+        getHouseRoomFormQuery(filterQuery)
+
+    }
+
     const handleReset = () => {
 
         filterQuery = null
-        filterBy = null
+        filterBy = []
 
         setFilterData({
             beds: '',
@@ -98,8 +140,10 @@ const HouseRooms = () => {
             maxGuests: '',
             rooms: '',
             price: '',
-            city: ''
+            province: ''
+
         })
+
     }
 
     const handleShow = () => setShow(true)
@@ -114,14 +158,71 @@ const HouseRooms = () => {
     return (
         <div className='HouseRooms'>
             <Container className='options'>
-                <Button variant="dark" onClick={handleShow}>
-                    Filter
-                </Button>
+                <Row className='justify-content-between'>
+                    <Col lg={{ span: 3 }} md={{ span: 6 }}>
+                        <Row>
+                            {
+                                loggedUser ?
+                                    <>
+                                        <Col lg={{ span: 3 }} md={{ span: 6 }}>
+                                            <Button variant="dark" onClick={handleShow}>
+                                                Filter
+                                            </Button>
+                                        </Col>
+                                        <Col lg={{ span: 9 }} md={{ span: 6 }} >
+                                            <Form.Group className="mb-3" controlId="province">
+                                                <Form.Select size="sm" value={filterData.province} name='province' onChange={handleCityFilter}>
+                                                    <option key='Select' value={''}>Todas las provincias</option>
+                                                    {
+                                                        AUTONOMIC_COMUNITIES_FILTER_NAME.map((eachComunity, idx) => {
+                                                            return (
+                                                                <option
+                                                                    key={eachComunity}
+                                                                    value={AUTONOMIC_COMUNITIES_FILTER_VALUE[idx]}
+                                                                >
+                                                                    {eachComunity}
+                                                                </option>
+                                                            )
+                                                        })
+                                                    }
+                                                </Form.Select>
+                                            </Form.Group>
+                                        </Col>
+                                    </>
 
-                <Button variant="dark" className='ShowMap' onClick={handleShowMap}>
-                    {showMap ? 'Show List' : 'Show Map'}
-                </Button>
-            </Container>
+                                    :
+                                    ''
+                            }
+
+                        </Row>
+
+
+                    </Col>
+                    <Col lg={{ span: 6 }} md={{ span: 6 }} className='text-center'>
+                        <Button variant="dark" className='ShowMap' onClick={handleShowMap}>
+                            {showMap ? 'Show List' : 'Show Map'}
+                        </Button>
+                    </Col>
+                    <Col lg={{ span: 3 }} md={{ span: 6 }} className='text-end'>
+                        {
+                            loggedUser ?
+                                <Button variant="dark" onClick={handleFavorite}>
+                                    {filterBy.userFavorites ? 'Hide Favorites' : 'Show Favorites'}
+                                </Button>
+                                :
+                                ''
+                        }
+
+                    </Col>
+
+                    <Col lg={{ span: 3 }} md={{ span: 6 }}>
+
+                    </Col>
+                </Row>
+
+
+
+            </Container >
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -154,10 +255,7 @@ const HouseRooms = () => {
                         <Form.Control type="number" value={filterData.price} onChange={handleInputChange} name="price" />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="city">
-                        <Form.Label>City</Form.Label>
-                        <Form.Control type="text" value={filterData.city} onChange={handleInputChange} name="city" />
-                    </Form.Group>
+
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -170,38 +268,37 @@ const HouseRooms = () => {
                 </Modal.Footer>
             </Modal>
             {
-                showMap &&
-                < Map houseData={houseData} zoom={5} />
+                houseData ?
+                    showMap &&
+                    < Map houseData={houseData} zoom={5} />
+                    :
+                    showMap &&
+                    'NO HAY MAPAS'
             }
             {
-                !showMap &&
-                <Container fluid style={{ maxWidth: '1200px' }}>
-                    <Row>
-                        {
-                            houseData[0].price.housePrice &&
-                            houseData.map((eachHouseData, idx) => {
-                                return (
-                                    <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
-                                        <HouseCard data={eachHouseData} />
-                                    </Col>
+                houseData ?
+                    !showMap &&
+                    <Container fluid style={{ maxWidth: '1200px' }}>
+                        <Row>
+                            {
+                                houseData[0].price.housePrice &&
+                                houseData.map((eachHouseData, idx) => {
+                                    return (
+                                        <Col key={idx} lg={{ span: 4 }} md={{ span: 6 }}>
+                                            <HouseCard data={eachHouseData} />
+                                        </Col>
 
 
-                                )
-                            })
-                        }
-                    </Row >
-                </Container>
+                                    )
+                                })
+                            }
+                        </Row >
+                    </Container>
+                    :
+                    !showMap &&
+                    ' NO HAY CASAS'
             }
-            <div className="footer border-top">
-                <p className='company-name'>© 2023 Compi, Inc.</p>
-                <p>·</p>
-                <Link to={'#terms'} className='nav-link'>Terms</Link>
-                <p>·</p>
-                <Link to={'#terms/privacy-policy'} className='nav-link'>Privacy</Link>
-                <p>·</p>
-                <Link to={'#help/privacy-choices'} className='nav-link'>Your Privacy Choices </Link>
-            </div>
-        </div>
+        </div >
     )
 }
 
