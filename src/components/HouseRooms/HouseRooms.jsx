@@ -287,7 +287,7 @@ const HouseRooms = () => {
             {
                 houseData ?
                     !showMap &&
-                    <Container fluid style={{ maxWidth: '1200px' }}>
+                    <Container fluid style={{ maxWidth: '90rem' }}>
                         <Row>
                             {
                                 houseData[0].price.housePrice &&

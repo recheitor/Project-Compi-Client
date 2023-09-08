@@ -5,11 +5,7 @@ const UserDetailsPage = () => {
 
     return (
         <Container>
-            <Row>
-                <Col md={{ offset: 3, span: 6 }}>
-                    <UserDetails />
-                </Col>
-            </Row>
+            <UserDetails />
         </Container>
     )
 }

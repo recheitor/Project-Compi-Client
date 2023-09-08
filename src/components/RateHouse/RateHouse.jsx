@@ -67,11 +67,11 @@ const Rate = ({ getHouseRoomForm }) => {
                 ))}
                 <br />
                 <br />
-                <Form.Group className="mb-3" controlId="comment">
-                    <Form.Control type="text" placeholder="Comment" value={score.comment} name="comment" onChange={handleCommentInputChange} />
+                <Form.Group className="mb-3 comment" controlId="comment">
+                    <Form.Control as="textarea" rows={3} placeholder="Comment" value={score.comment} name="comment" onChange={handleCommentInputChange} />
                 </Form.Group>
                 <Button type='submit' variant="dark">
-                    Confirm
+                    Send
                 </Button>
 
             </Form>

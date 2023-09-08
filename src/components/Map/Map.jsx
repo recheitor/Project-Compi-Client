@@ -41,7 +41,7 @@ function Map({ houseData, zoom }) {
             <GoogleMap
                 zoom={zoom}
                 center={centerMap}
-                mapContainerStyle={{ top: '160px', width: "100vw", height: "79vh", position: 'absolute', bottom: '41px', left: '0' }}
+                mapContainerStyle={{ top: '10.33rem', width: "100vw", height: "78vh", position: 'absolute', left: '0' }}
                 options={{ styles: customMapStyle }}
             >
                 {

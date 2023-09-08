@@ -60,45 +60,42 @@ const UserDetails = () => {
 
 
     return (
-        <Container className="AccountPage">
-            <Row >
-                <Col md={{ span: 8, offset: 2 }} className='text-center'>
-
-
-
-                    <img src={userData.avatar} style={{ height: '100px' }} alt={`${userData.firstName} avatar`} />
+        <>
+            <Row className="AccountPage align-items-center my-5">
+                <Col md={{ span: 3 }}>
+                    <img src={userData.avatar} style={{ height: '20rem', width: '20rem', borderRadius: '50rem', objectFit: 'cover', border: '4px solid rgb(255, 187, 0)' }} alt={`${userData.firstName} avatar`} />
+                </Col>
+                <Col md={{ span: 6 }} style={{ marginLeft: '2rem' }}>
                     <h2>{userData.firstName} {userData.lastName}</h2>
                     <p>{userData.bio}</p>
-
-                    <hr />
-
-                    {
-                        !userData.rating
-                            ?
-                            <p>cargando</p>
-                            :
-                            userData.rating.map(eachRating => {
-                                return (
-                                    <Rating rating={eachRating} />
-                                )
-                            })
-                    }
-
-                    {
-                        shouldRenderContent ?
-
-                            <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
-
-                            :
-                            ''
-                    }
-                    <Form onSubmit={handleFormSubmit} >
-                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete Profile</Button>
-                    </Form>
-
                 </Col>
+                <Col md={{ span: 2 }} className='align-self-end text-end'>
+                    <Form onSubmit={handleFormSubmit} >
+                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete account</Button>
+                    </Form>
+                </Col>
+            </Row>
+            <Row>
+                {
+                    shouldRenderContent &&
+                    <>
+                        <h2 className='mt-2 mb-4'>Rate this user!</h2>
+                        <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
+                    </>
+                }
+                {
+                    !userData.rating
+                        ?
+                        <p>Loading...</p>
+                        :
+                        userData.rating.map(eachRating => {
+                            return (
+                                <Rating rating={eachRating} />
+                            )
+                        })
+                }
             </Row >
-        </Container >
+        </>
     )
 }
 

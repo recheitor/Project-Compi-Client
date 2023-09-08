@@ -59,7 +59,6 @@ const Navigation = () => {
                         }
                     </Nav>
                     <Nav className="d-flex nav-bar-dropdown">
-
                         <NavDropdown
                             title={`Hello, ${loggedUser ? loggedUser.firstName : 'guest'}! `}
                             className="me-auto navbar-text"

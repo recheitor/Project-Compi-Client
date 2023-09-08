@@ -68,12 +68,13 @@ const RateUser = ({ getUserInfo }) => {
                     </>
 
                 ))}
+                <br />
+                <br />
                 <Form.Group className="mb-3" controlId="comment">
-                    <Form.Label>Comment</Form.Label>
-                    <Form.Control type="text" value={score.comment} name="comment" onChange={handleCommentInputChange} />
+                    <Form.Control as="textarea" rows={3} placeholder='Comment' value={score.comment} name="comment" onChange={handleCommentInputChange} />
                 </Form.Group>
-                <Button type='submit' >
-                    Confirmar
+                <Button type='submit' variant='dark' className='mb-4' >
+                    Send
                 </Button>
 
             </Form>

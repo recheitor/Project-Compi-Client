@@ -120,14 +120,14 @@ const HouseRoomsDetails = () => {
                                     }
                                 </Col>
                                 <Col className="text-end pt-3">
-                                    <h4>Hosted by <Link to={`/user/${houseData.owner._id}`}>{houseData.owner.firstName} {houseData.owner.lastName}</Link></h4>
+                                    <h4>Hosted by <img src={houseData.owner.avatar} style={{ height: '2rem', width: '2rem', borderRadius: '50rem' }} /> <Link to={`/user/${houseData.owner._id}`}>{houseData.owner.firstName} {houseData.owner.lastName}</Link></h4>
                                     <div className="house-price-container">
                                         <h3><strong>From</strong> € {houseData.price.housePrice}<strong> night</strong></h3>
                                     </div>
                                 </Col>
                             </Row>
 
-                            <GalleryCarousel gallery={houseData.gallery} size={'70vh'} />
+                            <GalleryCarousel gallery={houseData.gallery} size={'68vh'} />
 
                             <br />
                             <div className="description">
@@ -139,7 +139,7 @@ const HouseRoomsDetails = () => {
                                 <Col>
                                     <div className="house-info">
                                         <h4>House info: </h4>
-                                        <ul>
+                                        <ul className='d-flex justify-content-around'>
                                             <li>{houseData.info.maxGuests} Guests</li>
                                             <li>{houseData.info.rooms} Rooms</li>
                                             {
@@ -159,14 +159,13 @@ const HouseRoomsDetails = () => {
                                 </Col>
                                 <Col className="text-end d-flex flex-column">
                                     <p className='cleaning-price'>House Cleaning price <strong>€ {houseData.price.cleaningPrice}</strong></p>
-                                    <div className="mt-auto">
-                                        <Link className='btn btn-warning mb-1' to={`/house-edit/${houseData._id}`}>Edit</Link>
+                                    <div className="mt-auto d-flex justify-content-end mb-3">
+                                        <Link className='btn btn-warning mb-1 mx-2' to={`/house-edit/${houseData._id}`}>Edit</Link>
                                         <Form onSubmit={houseHandleFormSubmit(houseData._id)}>
                                             <Button variant="danger" type="submit">Delete</Button>
                                         </Form>
                                     </div>
                                 </Col>
-
                             </Row>
 
                             {
@@ -174,14 +173,13 @@ const HouseRoomsDetails = () => {
                                 <Accordion>
                                     <Accordion.Item eventKey="0">
                                         <Accordion.Header>What this place offers</Accordion.Header>
-                                        <Accordion.Body>
+                                        <Accordion.Body className='d-flex justify-content-between'>
                                             {
                                                 houseData.amenities.map((eachAmenity, idx) => {
                                                     return (
                                                         eachAmenity.included ?
                                                             <div key={idx}>
-                                                                <p>{eachAmenity.amenity.name}</p>
-                                                                <img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" />
+                                                                <p><img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" /> {eachAmenity.amenity.name}</p>
                                                             </div>
                                                             :
                                                             ''
@@ -197,7 +195,7 @@ const HouseRoomsDetails = () => {
 
                             {
                                 houseData.rooms &&
-                                <h2 className='rooms-title mt-5'>{houseData.title}'s rooms</h2>
+                                <h2 className='rooms-title mt-5' style={{ textAlign: 'center' }}>{houseData.title}'s rooms</h2>
                             }
                         </>
                         :
@@ -207,12 +205,42 @@ const HouseRoomsDetails = () => {
                         houseData.rooms.map(eachRoom => {
                             return (
                                 <div key={eachRoom.title} className='Room'>
-                                    <Row className="room-header justify-content-between mb-3">
+
+                                    <Row className="room-header justify-content-between mt-5 mb-3">
                                         <Col>
                                             <h2>{eachRoom.title}</h2>
+                                            <div className='house-price-container'>
+                                                <h3>€ {eachRoom.price.roomPrice}<strong> night</strong></h3>
+                                            </div>
                                         </Col>
-                                        <Col className="text-end pt-3 room-price-container">
-                                            <h3>€ {eachRoom.price.roomPrice}<strong> night</strong></h3>
+                                        <Col className="text-end pt-3 ">
+                                            {
+                                                eachRoom.bookings.length > 0 ?
+                                                    (
+                                                        eachRoom.bookings.map(eachBooking => {
+                                                            const entryDateStr = eachBooking.bookingDates.entry
+                                                            const exitDateStr = eachBooking.bookingDates.exit
+
+                                                            const entryDate = new Date(entryDateStr);
+                                                            const exitDate = new Date(exitDateStr);
+
+                                                            const actualDate = new Date();
+
+                                                            return (
+                                                                (actualDate >= entryDate && actualDate <= exitDate) &&
+                                                                <h4>
+                                                                    Rented by <Link
+                                                                        to={`/user/${eachBooking.user._id}`}>
+                                                                        <img src={eachBooking.user.avatar} style={{ height: '2rem', width: '2rem', borderRadius: '50rem' }} /> {eachBooking.user.firstName} {eachBooking.user.lastName}
+                                                                    </Link> until {eachBooking.bookingDates.exit.split('T')[0]}
+                                                                </h4>
+                                                            )
+                                                        })
+                                                    )
+                                                    :
+                                                    <h4 className='can-book'>Booking available</h4>
+                                            }
+                                            <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
                                         </Col>
                                     </Row>
 
@@ -223,59 +251,33 @@ const HouseRoomsDetails = () => {
                                         <h2>Something about the room...</h2>
                                         <p>{eachRoom.description}</p>
                                     </div>
-                                    <hr />
 
-                                    <div className="house-info">
-                                        <h4>Room info: </h4>
-                                        <ul>
-                                            <li>{eachRoom.info.maxGuests} guest</li>
-                                            {
-                                                eachRoom.info.beds === 1 ?
-                                                    <li>{eachRoom.info.beds} bed</li>
-                                                    :
-                                                    <li>{eachRoom.info.beds} beds</li>
-                                            }
-                                            <li>Bathroom type: {eachRoom.info.bathroom}</li>
-                                        </ul>
-                                    </div>
-
-                                    <p>€ {eachRoom.price.cleaningPrice} cleaning price</p>
-
-                                    {
-
-                                        eachRoom.bookings.map(eachBooking => {
-                                            const entryDateStr = eachBooking.bookingDates.entry
-                                            const exitDateStr = eachBooking.bookingDates.exit
-
-                                            const entryDate = new Date(entryDateStr);
-                                            const exitDate = new Date(exitDateStr);
-
-                                            const actualDate = new Date();
-
-                                            return (
-                                                (actualDate >= entryDate && actualDate <= exitDate) &&
-                                                <p>
-                                                    Rented by <Link
-                                                        to={`/user/${eachBooking.user._id}`}>
-                                                        {eachBooking.user.firstName} {eachBooking.user.lastName}
-                                                    </Link> until {eachBooking.bookingDates.exit.split('T')[0]}
-                                                </p>
-                                            )
-
-                                        })
-                                    }
-                                    <hr />
-
-                                    <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
-                                    <br />
-                                    <hr />
-
-                                    <div className="room-action-buttons">
-                                        <Form onSubmit={roomHandleFormSubmit(eachRoom._id)} >
-                                            <Button variant="danger" type="submit" >Delete</Button>
-                                        </Form>
-                                        <Link className='btn btn-warning' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
-                                    </div>
+                                    <Row className='justify-content-between'>
+                                        <Col>
+                                            <div className="house-info">
+                                                <h4>Room info: </h4>
+                                                <ul className='d-flex justify-content-around'>
+                                                    <li>{eachRoom.info.maxGuests} Guests</li>
+                                                    {
+                                                        eachRoom.info.beds === 1 ?
+                                                            <li>{eachRoom.info.beds} Bed</li>
+                                                            :
+                                                            <li>{eachRoom.info.beds} Beds</li>
+                                                    }
+                                                    <li>{eachRoom.info.bathroom} bathroom</li>
+                                                </ul>
+                                            </div>
+                                        </Col>
+                                        <Col className="text-end d-flex flex-column">
+                                            <p className='cleaning-price'>Room Cleaning price <strong>€ {eachRoom.price.cleaningPrice}</strong></p>
+                                            <div className="mt-auto d-flex justify-content-end mb-3">
+                                                <Link className='btn btn-warning mb-1 mx-2' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
+                                                <Form onSubmit={roomHandleFormSubmit(eachRoom._id)}>
+                                                    <Button variant="danger" type="submit">Delete</Button>
+                                                </Form>
+                                            </div>
+                                        </Col>
+                                    </Row>
                                     <hr />
                                 </div>
                             )
@@ -283,13 +285,15 @@ const HouseRoomsDetails = () => {
                     }
                     {
                         shouldRenderContent ?
-                            <RateHouse getHouseRoomForm={getHouseRoomForm} toWhereRates={'House'} />
+                            <>
+                                <h2 className="rating mt-4 mb-4">Rate this house!</h2>
+                                <RateHouse getHouseRoomForm={getHouseRoomForm} toWhereRates={'House'} />
+                            </>
                             :
-                            <p>You've already rated this house</p>
+                            <p className="rating mt-4" style={{ marginBottom: '0' }}>You've already rated this house</p>
                     }
+                    <br />
                     {
-
-
                         houseData.rating &&
                         houseData.rating.map(eachRating => {
                             return (

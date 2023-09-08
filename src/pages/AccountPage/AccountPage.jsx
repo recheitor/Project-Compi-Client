@@ -68,53 +68,69 @@ const AccountPage = () => {
             })
             .catch(err => console.log(err))
     }
-    let shouldRenderContent
-    if (userData.rating) {
-        shouldRenderContent = !userData.rating.some((ratedBy) => ratedBy.userId._id === loggedUser._id)
-    }
 
     return (
-        <Container className="AccountPage">
-            <Row className='justify-content-center'>
-                <Col md={{ span: 6 }} className='text-center'>
-
-
-
-                    <img src={userData.avatar} style={{ height: '100px' }} alt={`${userData.firstName} avatar`} />
+        <Container className='AccountPage'>
+            <Row className="align-items-center my-5">
+                <Col md={{ span: 3, offset: 1 }}>
+                    <img src={userData.avatar} style={{ height: '200px', width: '200px', borderRadius: '50rem', objectFit: 'cover', border: '4px solid rgb(255, 187, 0)' }} alt={`${userData.firstName} avatar`} />
+                </Col>
+                <Col md={{ span: 6 }}>
                     <h2>{userData.firstName} {userData.lastName}</h2>
                     <p>{userData.bio}</p>
-
-                    <hr />
-
-                    {
-                        !userData.rating
-                            ?
-                            <p>cargando</p>
-                            :
-                            userData.rating.map(eachRating => {
-                                return (
-                                    <Rating rating={eachRating} />
-                                )
-                            })
-                    }
-
-                    {
-                        shouldRenderContent ?
-
-                            <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
-
-                            :
-                            ''
-                    }
+                </Col>
+                <Col md={{ span: 2 }} className='align-self-end text-end'>
                     <Link to={`/profile-edit/${userData._id}`} className='btn btn-warning mb-3' style={{ width: '200px' }}>Edit profile</Link>
 
                     <Form onSubmit={handleFormSubmit} >
-                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete Profile</Button>
+                        <Button variant="danger" type="submit" style={{ width: '200px' }}>Delete account</Button>
                     </Form>
-
                 </Col>
+            </Row>
+
+            <h1>My bookings</h1>
+            <Row>
+                {
+                    userBookingsData ?
+                        userBookingsData.map((eachBooking, idx) => {
+                            console.log(eachBooking)
+                            return (
+                                <div key={idx} className='my-4'>
+                                    <Row>
+                                        <Col>
+                                            <h2 className='mb-3'>{eachBooking.room.title}</h2>
+                                        </Col>
+                                        <Col className='text-end'>
+                                            <Form onSubmit={handleDeleteBookingSubmit(eachBooking._id)} >
+                                                <Button variant="danger" type="submit" style={{ width: '200px' }}>Cancel booking</Button>
+                                            </Form>
+                                        </Col>
+                                    </Row>
+                                    <GalleryCarousel gallery={eachBooking.room.gallery} size={'50vh'} />
+                                    <br />
+                                    <hr />
+                                </div>
+                            )
+                        })
+                        :
+                        'Loading...'
+                }
+            </Row>
+            <h1 className='mb-4'>My ratings</h1>
+            <Row>
+                {
+                    !userData.rating
+                        ?
+                        <p>Loading...</p>
+                        :
+                        userData.rating.map(eachRating => {
+                            return (
+                                <Rating rating={eachRating} />
+                            )
+                        })
+                }
             </Row >
-        </Container >
+        </Container>
     )
 }
 

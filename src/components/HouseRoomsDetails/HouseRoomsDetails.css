@@ -71,22 +71,24 @@
     border-radius: 5px;
     padding-left: 2rem;
     padding-right: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem;
 }
 
 .HouseRoomsDetails .house-info h4 {
-    font-size: 1.6rem;
+    font-size: 1rem;
 }
 
 .HouseRoomsDetails .house-info ul {
     list-style-type: none;
     font-weight: 300;
-    margin-top: 1.2rem;
+    margin-top: 0.8rem;
+    padding-left: 0;
 }
 
 .HouseRoomsDetails .house-info li {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     font-weight: 400;
     color: rgb(66, 66, 66);
 }
@@ -98,6 +100,18 @@
     margin-bottom: 0;
 }
 
+.HouseRoomsDetails .accordion-body p {
+    margin-bottom: 0;
+}
+
+.HouseRoomsDetails .accordion-button:not(.collapsed){
+    background-color: rgba(246, 198, 67, 0.20);
+}
+
+.HouseRoomsDetails .accordion-button:focus {
+    box-shadow: none;
+}
+
 .HouseRoomsDetails .rooms-title {
     font-size: 3rem;
     font-weight: 400;
@@ -106,11 +120,48 @@
 }
 
 .HouseRoomsDetails .room-header h2 {
-    font-size: 2.4rem;
+    font-size: 3rem;
     font-weight: 400;
     color: rgb(255, 187, 0);
 }
 
+.HouseRoomsDetails .room-header h4 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.HouseRoomsDetails .room-header p {
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+
+.HouseRoomsDetails .room-price-container{
+    margin-top: 1.4rem;
+}
+
+.HouseRoomsDetails .room-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.HouseRoomsDetails .room-header strong {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.HouseRoomsDetails .room-header a {
+    color: rgb(255, 187, 0);
+    text-decoration: none;
+}
+
+.HouseRoomsDetails .room-header a:hover {
+    color: rgb(255, 222, 133);
+}
+
+.HouseRoomsDetails .room-header .can-book {
+    color: green;
+}
 
 
 
