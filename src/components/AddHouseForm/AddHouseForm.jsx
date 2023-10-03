@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Form, Button } from "react-bootstrap"
+import { Form, Button, Row, Col } from "react-bootstrap"
 import houseServices from '../../services/house.services'
 import { useNavigate } from 'react-router-dom'
 import uploadServices from '../../services/upload.services'
@@ -155,6 +155,7 @@ const AddHouseForm = () => {
                     <Form.Control type="number" value={houseData.cleaningPrice} name="cleaningPrice" onChange={handleInputChange} />
                 </Form.Group>
 
+                <p>Location</p>
                 <AutocompleteForm getPlaceCoordinates={getPlaceCoordinates} />
 
                 <Form.Group className="mb-3" controlId="street">
@@ -202,25 +203,31 @@ const AddHouseForm = () => {
 
                 <Form.Group className="mb-3" controlId="amenities">
                     <Form.Label>Amenities</Form.Label>
-                    {
-                        houseData.amenities.map(elem => {
+                    <Row>
+                        {
+                            houseData.amenities.map(elem => {
 
-                            return (
+                                return (
 
-                                <div key={`${elem.amenity}`} className="mb-3">
-                                    <Form.Check
-                                        type="checkbox"
-                                        label={`${elem.name}`}
-                                        checked={elem.included}
-                                        name={`${elem.name}`}
-                                        onChange={handleCheckChange}
-                                    />
-                                    <img style={{ height: '20px' }} src={elem.icon} alt="icon" />
-                                </div>
-                            )
+                                    <Col lg={{ span: 3 }} md={{ span: 4 }} key={`${elem.amenity}`} className="mb-3">
+                                        <Form.Check
+                                            type="checkbox"
+                                            label={`${elem.name}`}
+                                            checked={elem.included}
+                                            name={`${elem.name}`}
+                                            onChange={handleCheckChange}
+                                        />
+                                        <div className="ms-4">
+                                            <img style={{ height: '20px' }} src={elem.icon} alt="icon" />
 
-                        })
-                    }
+                                        </div>
+                                    </Col>
+                                )
+
+                            })
+                        }
+                    </Row>
+
                 </Form.Group>
 
                 <div className="d-grid">

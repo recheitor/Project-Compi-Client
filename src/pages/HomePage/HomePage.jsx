@@ -1,4 +1,3 @@
-import { Container, Row, Col } from 'react-bootstrap'
 import HouseRooms from '../../components/HouseRooms/HouseRooms'
 
 const HomePage = () => {

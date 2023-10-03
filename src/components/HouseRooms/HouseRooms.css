@@ -10,3 +10,33 @@
     padding-right: 1.4rem;
     background-color: white;
 }
+
+
+
+
+.button-32 {
+    outline: 0;
+    background: #fdc93c !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    border-radius: 10px !important;
+    border: 1px solid #f1ed90 !important;
+}
+
+.button-33 {
+    outline: 0;
+    background: #9e833c !important;
+    color: white;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    border-radius: 10px !important;
+    border: 1px solid #f1ed90 !important;
+}
+
+.button-32:not(:disabled):hover,
+.button-32:not(:disabled):focus {
+    outline: 0;
+    background: #e6a604 !important;
+    color: white;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .2), 0 3px 8px 0 rgba(0, 0, 0, .15);
+}

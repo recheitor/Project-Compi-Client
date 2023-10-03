@@ -63,7 +63,6 @@ const AccountPage = () => {
         bookingService
             .deleteBooking(_id)
             .then(() => {
-                console.log('Delete booking')
                 getUserInfo()
             })
             .catch(err => console.log(err))
@@ -89,16 +88,19 @@ const AccountPage = () => {
             </Row>
 
             <h1>My bookings</h1>
+            <hr />
             <Row>
                 {
                     userBookingsData ?
                         userBookingsData.map((eachBooking, idx) => {
-                            console.log(eachBooking)
                             return (
                                 <div key={idx} className='my-4'>
                                     <Row>
                                         <Col>
-                                            <h2 className='mb-3'>{eachBooking.room.title}</h2>
+                                            <h3 className='mb-3'>{eachBooking.room.title}</h3>
+                                        </Col>
+                                        <Col>
+                                            <h5 className='mt-2'>From {eachBooking.bookingDates.entry.split('T')[0]} To {eachBooking.bookingDates.exit.split('T')[0]}</h5>
                                         </Col>
                                         <Col className='text-end'>
                                             <Form onSubmit={handleDeleteBookingSubmit(eachBooking._id)} >
@@ -106,7 +108,7 @@ const AccountPage = () => {
                                             </Form>
                                         </Col>
                                     </Row>
-                                    <GalleryCarousel gallery={eachBooking.room.gallery} size={'50vh'} />
+                                    <GalleryCarousel gallery={eachBooking.room.gallery} size={'30vh'} />
                                     <br />
                                     <hr />
                                 </div>
@@ -125,7 +127,9 @@ const AccountPage = () => {
                         :
                         userData.rating.map(eachRating => {
                             return (
-                                <Rating rating={eachRating} />
+                                <Col lg={{ span: 4 }}>
+                                    <Rating rating={eachRating} />
+                                </Col>
                             )
                         })
                 }

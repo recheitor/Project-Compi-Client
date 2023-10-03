@@ -53,6 +53,8 @@ const UserDetails = () => {
             .catch(err => console.log(err))
     }
 
+
+
     let shouldRenderContent
     if (userData.rating) {
         shouldRenderContent = !userData.rating.some((ratedBy) => ratedBy.userId._id === loggedUser._id)
@@ -77,22 +79,29 @@ const UserDetails = () => {
             </Row>
             <Row>
                 {
-                    shouldRenderContent &&
-                    <>
-                        <h2 className='mt-2 mb-4'>Rate this user!</h2>
-                        <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
-                    </>
-                }
-                {
                     !userData.rating
                         ?
                         <p>Loading...</p>
                         :
                         userData.rating.map(eachRating => {
                             return (
-                                <Rating rating={eachRating} />
+                                <Col lg={{ span: 4 }} className='mt-5'>
+
+                                    <Rating rating={eachRating} />
+                                </Col>
+
                             )
                         })
+                }
+
+                {
+                    shouldRenderContent &&
+                    <>
+                        <h2 className='mt-2 mb-4'>Rate this user!</h2>
+                        <Col lg={{ span: 4 }}>
+                            <RateUser getUserInfo={getUserInfo} toWhereRates={'User'} />
+                        </Col>
+                    </>
                 }
             </Row >
         </>

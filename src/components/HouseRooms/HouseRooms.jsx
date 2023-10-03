@@ -163,7 +163,7 @@ const HouseRooms = () => {
                         <Row>
                             <Col lg={{ span: 3 }} md={{ span: 6 }}>
                                 {loggedUser ?
-                                    <Button variant="dark" onClick={handleShow}>
+                                    <Button className='button-32' variant='custom' onClick={handleShow}>
                                         Filter
                                     </Button>
                                     :
@@ -176,9 +176,9 @@ const HouseRooms = () => {
                                 <Form.Group className="mb-3" controlId="province">
                                     {
                                         loggedUser ?
-                                            <Form.Select size="sm" value={filterData.province} name='province' onChange={handleCityFilter}>
+                                            <Form.Select className='button-32' size="m" value={filterData.province} name='province' onChange={handleCityFilter}>
 
-                                                <option key='Select' value={''}>Todas las provincias</option>
+                                                <option key='Select' value={''}>All provinces</option>
                                                 {
                                                     AUTONOMIC_COMUNITIES_FILTER_NAME.map((eachComunity, idx) => {
                                                         return (
@@ -205,14 +205,14 @@ const HouseRooms = () => {
 
                     </Col>
                     <Col lg={{ span: 6 }} md={{ span: 6 }} className='text-center'>
-                        <Button variant="dark" className='ShowMap' onClick={handleShowMap}>
+                        <Button className='button-32 ShowMap' variant="custom" onClick={handleShowMap}>
                             {showMap ? 'Show List' : 'Show Map'}
                         </Button>
                     </Col>
                     <Col lg={{ span: 3 }} md={{ span: 6 }} className='text-end'>
                         {
                             loggedUser ?
-                                <Button variant="dark" onClick={handleFavorite}>
+                                <Button variant="custom" className='button-32' onClick={handleFavorite}>
                                     {filterBy.userFavorites ? 'Hide Favorites' : 'Show Favorites'}
                                 </Button>
                                 :
@@ -265,10 +265,10 @@ const HouseRooms = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary" className='ModalFilterButton' onClick={handleReset}>
+                    <Button variant="custom" className='button-33' onClick={handleReset}>
                         Reset Filter
                     </Button>
-                    <Button variant="dark" className='ModalFilterButton apply-filter' onClick={handleClose}>
+                    <Button variant="custom" className='button-32' onClick={handleClose}>
                         Filter
                     </Button>
                 </Modal.Footer>

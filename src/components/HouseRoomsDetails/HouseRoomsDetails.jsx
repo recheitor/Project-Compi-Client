@@ -127,7 +127,7 @@ const HouseRoomsDetails = () => {
                                 </Col>
                             </Row>
 
-                            <GalleryCarousel gallery={houseData.gallery} size={'68vh'} />
+                            <GalleryCarousel gallery={houseData.gallery} size={'50vh'} />
 
                             <br />
                             <div className="description">
@@ -136,9 +136,8 @@ const HouseRoomsDetails = () => {
                             </div>
 
                             <Row className='justify-content-between'>
-                                <Col>
+                                <Col lg={{ span: 4 }}>
                                     <div className="house-info">
-                                        <h4>House info: </h4>
                                         <ul className='d-flex justify-content-around'>
                                             <li>{houseData.info.maxGuests} Guests</li>
                                             <li>{houseData.info.rooms} Rooms</li>
@@ -157,8 +156,36 @@ const HouseRoomsDetails = () => {
                                         </ul>
                                     </div>
                                 </Col>
+
+                                {
+                                    houseData.amenities.length > 0 &&
+                                    <Col lg={{ span: 6 }}>
+                                        <Accordion>
+                                            <Accordion.Item eventKey="0">
+                                                <Accordion.Header>What this place offers</Accordion.Header>
+                                                <Accordion.Body className='d-flex justify-content-between'>
+                                                    {
+                                                        houseData.amenities.map((eachAmenity, idx) => {
+                                                            return (
+                                                                eachAmenity.included ?
+                                                                    <div key={idx}>
+                                                                        <p><img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" /> {eachAmenity.amenity.name}</p>
+                                                                    </div>
+                                                                    :
+                                                                    ''
+                                                            )
+                                                        })
+                                                    }
+                                                </Accordion.Body>
+                                            </Accordion.Item>
+                                        </Accordion>
+                                    </Col>
+
+                                }
+
+                            </Row>
+                            <Row>
                                 <Col className="text-end d-flex flex-column">
-                                    <p className='cleaning-price'>House Cleaning price <strong>€ {houseData.price.cleaningPrice}</strong></p>
                                     <div className="mt-auto d-flex justify-content-end mb-3">
                                         <Link className='btn btn-warning mb-1 mx-2' to={`/house-edit/${houseData._id}`}>Edit</Link>
                                         <Form onSubmit={houseHandleFormSubmit(houseData._id)}>
@@ -168,34 +195,13 @@ const HouseRoomsDetails = () => {
                                 </Col>
                             </Row>
 
-                            {
-                                houseData.amenities.length > 0 &&
-                                <Accordion>
-                                    <Accordion.Item eventKey="0">
-                                        <Accordion.Header>What this place offers</Accordion.Header>
-                                        <Accordion.Body className='d-flex justify-content-between'>
-                                            {
-                                                houseData.amenities.map((eachAmenity, idx) => {
-                                                    return (
-                                                        eachAmenity.included ?
-                                                            <div key={idx}>
-                                                                <p><img style={{ height: '20px' }} src={eachAmenity.amenity.icon} alt="icon" /> {eachAmenity.amenity.name}</p>
-                                                            </div>
-                                                            :
-                                                            ''
-                                                    )
-                                                })
-                                            }
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                </Accordion>
-                            }
+
 
                             <hr />
 
                             {
                                 houseData.rooms &&
-                                <h2 className='rooms-title mt-5' style={{ textAlign: 'center' }}>{houseData.title}'s rooms</h2>
+                                <h4 className='rooms-title mt-3' style={{ textAlign: 'center' }}>{houseData.title}'s rooms</h4>
                             }
                         </>
                         :
@@ -206,7 +212,7 @@ const HouseRoomsDetails = () => {
                             return (
                                 <div key={eachRoom.title} className='Room'>
 
-                                    <Row className="room-header justify-content-between mt-5 mb-3">
+                                    <Row className="room-header justify-content-between mt-1 mb-3">
                                         <Col>
                                             <h2>{eachRoom.title}</h2>
                                             <div className='house-price-container'>
@@ -215,36 +221,37 @@ const HouseRoomsDetails = () => {
                                         </Col>
                                         <Col className="text-end pt-3 ">
                                             {
-                                                eachRoom.bookings.length > 0 ?
-                                                    (
-                                                        eachRoom.bookings.map(eachBooking => {
-                                                            const entryDateStr = eachBooking.bookingDates.entry
-                                                            const exitDateStr = eachBooking.bookingDates.exit
+                                                eachRoom.bookings.length > 0 &&
+                                                (
+                                                    eachRoom.bookings.map(eachBooking => {
+                                                        const entryDateStr = eachBooking.bookingDates.entry
+                                                        const exitDateStr = eachBooking.bookingDates.exit
 
-                                                            const entryDate = new Date(entryDateStr);
-                                                            const exitDate = new Date(exitDateStr);
+                                                        const entryDate = new Date(entryDateStr);
+                                                        const exitDate = new Date(exitDateStr);
 
-                                                            const actualDate = new Date();
+                                                        const actualDate = new Date();
 
-                                                            return (
-                                                                (actualDate >= entryDate && actualDate <= exitDate) &&
-                                                                <h4>
-                                                                    Rented by <Link
-                                                                        to={`/user/${eachBooking.user._id}`}>
-                                                                        <img src={eachBooking.user.avatar} style={{ height: '2rem', width: '2rem', borderRadius: '50rem' }} /> {eachBooking.user.firstName} {eachBooking.user.lastName}
-                                                                    </Link> until {eachBooking.bookingDates.exit.split('T')[0]}
-                                                                </h4>
-                                                            )
-                                                        })
-                                                    )
-                                                    :
-                                                    <h4 className='can-book'>Booking available</h4>
+                                                        return (
+                                                            (actualDate >= entryDate && actualDate <= exitDate) &&
+                                                            <h4>
+                                                                Rented by <Link
+                                                                    to={`/user/${eachBooking.user._id}`}>
+                                                                    <img src={eachBooking.user.avatar} style={{ height: '2rem', width: '2rem', borderRadius: '50rem' }} /> {eachBooking.user.firstName} {eachBooking.user.lastName}
+                                                                </Link> until {eachBooking.bookingDates.exit.split('T')[0]}
+                                                            </h4>
+
+
+                                                        )
+                                                    })
+                                                )
+
                                             }
                                             <Link className='btn btn-dark' disabled={true} to={`/booking/${eachRoom._id}`}>Booking</Link>
                                         </Col>
                                     </Row>
 
-                                    <GalleryCarousel gallery={eachRoom.gallery} size={'60vh'} />
+                                    <GalleryCarousel gallery={eachRoom.gallery} size={'50vh'} />
                                     <br />
 
                                     <div className="description">
@@ -253,9 +260,8 @@ const HouseRoomsDetails = () => {
                                     </div>
 
                                     <Row className='justify-content-between'>
-                                        <Col>
+                                        <Col lg={{ span: 4 }}>
                                             <div className="house-info">
-                                                <h4>Room info: </h4>
                                                 <ul className='d-flex justify-content-around'>
                                                     <li>{eachRoom.info.maxGuests} Guests</li>
                                                     {
@@ -269,8 +275,8 @@ const HouseRoomsDetails = () => {
                                             </div>
                                         </Col>
                                         <Col className="text-end d-flex flex-column">
-                                            <p className='cleaning-price'>Room Cleaning price <strong>€ {eachRoom.price.cleaningPrice}</strong></p>
-                                            <div className="mt-auto d-flex justify-content-end mb-3">
+                                            <p className='cleaning-price'>Cleaning price <strong>€ {eachRoom.price.cleaningPrice}</strong>(Not incl.)</p>
+                                            <div className="mt-3 d-flex justify-content-end mb-3">
                                                 <Link className='btn btn-warning mb-1 mx-2' to={`/rooms-edit/${eachRoom._id}`}>Edit</Link>
                                                 <Form onSubmit={roomHandleFormSubmit(eachRoom._id)}>
                                                     <Button variant="danger" type="submit">Delete</Button>
@@ -283,6 +289,21 @@ const HouseRoomsDetails = () => {
                             )
                         })
                     }
+                    <br />
+                    <Row className='justify-content-between'>
+
+                        {
+                            houseData.rating &&
+                            houseData.rating.map(eachRating => {
+                                return (
+                                    <Col lg={{ span: 3 }} style={{ width: '400px' }}>
+                                        <Rating rating={eachRating} />
+                                    </Col>
+                                )
+                            })
+                        }
+
+                    </Row>
                     {
                         shouldRenderContent ?
                             <>
@@ -290,19 +311,16 @@ const HouseRoomsDetails = () => {
                                 <RateHouse getHouseRoomForm={getHouseRoomForm} toWhereRates={'House'} />
                             </>
                             :
-                            <p className="rating mt-4" style={{ marginBottom: '0' }}>You've already rated this house</p>
+                            ''
                     }
+                    <hr />
+
                     <br />
-                    {
-                        houseData.rating &&
-                        houseData.rating.map(eachRating => {
-                            return (
-                                <Rating rating={eachRating} />
-                            )
-                        })
-                    }
-                    <br />
-                    <MapDetails houseData={[houseData]} zoom={15} />
+                    <Row className='justify-content-center'>
+
+                        <MapDetails houseData={[houseData]} zoom={15} />
+                    </Row>
+
                 </Col>
             </Row >
         </div >
