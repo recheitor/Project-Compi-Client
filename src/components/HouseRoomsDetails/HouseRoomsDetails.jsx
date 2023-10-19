@@ -160,7 +160,7 @@ const HouseRoomsDetails = () => {
 
                 {houseData.amenities.length > 0 && (
                   <Col lg={{ span: 6 }}>
-                    <Accordion className="mb-1">
+                    <Accordion className="mb-2">
                       <Accordion.Item eventKey="0">
                         <Accordion.Header>What this place offers</Accordion.Header>
                         <Accordion.Body className="d-flex justify-content-between">
