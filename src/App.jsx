@@ -1,4 +1,3 @@
-import { useContext, useState } from 'react'
 import './App.css'
 import Navigation from './components/Navigation/Navigation'
 import AppRoutes from './routes/AppRoutes'
